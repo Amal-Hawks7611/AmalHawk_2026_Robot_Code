@@ -1,0 +1,89 @@
+package frc.robot;
+
+import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import swervelib.math.Matter;
+
+public final class Constants {
+    public static final double ROBOT_MASS = 104.72 * 0.453592; // TODO GİRİLECEK
+    public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+    public static final double LOOP_TIME = 0.13; 
+    public static final double MAX_SPEED = 3;
+
+    public static Color setBrightness(Color currentColor, double brightness) {
+        return new Color(currentColor.red * brightness, currentColor.green * brightness,
+                currentColor.blue * brightness);
+    }
+
+    public static final class DrivebaseConstants {
+        public static final double WHEEL_LOCK_TIME = 10;
+        public static final PIDConstants transation = new PIDConstants(12, 0.0, 0.05);
+        public static final PIDConstants angle = new PIDConstants(3, 0.0, 0.05);
+    }
+
+    public static class OperatorConstants {
+        public static final double DEADBAND = 0.1;
+        public static final double LEFT_Y_DEADBAND = 0.1;
+        public static final double RIGHT_X_DEADBAND = 0.1;
+        public static final double TURN_CONSTANT = 6;
+    }
+
+    public static final class LedSubsystem {
+        public static int LED_PWM_PORT = 0;
+        public static int LED_LENGTH = 180;
+        public static int BREATHE_MAGNITUDE = 5;
+        public static LEDPattern ELEVATOR_PROCESS_COLOR = LEDPattern.solid(setBrightness(Color.kPurple, 0.69 * 0.8));
+        public static LEDPattern TARGET_FOCUS_COLOR = LEDPattern.solid(setBrightness(Color.kGreen, 0.69 * 0.8));
+        public static LEDPattern INTAKE_COLOR = LEDPattern.solid(setBrightness(Color.kWhite, 0.69 * 0.8));
+        public static LEDPattern ALGEA_INTAKE_COLOR = LEDPattern.solid(setBrightness(Color.kAqua, 0.69 * 0.8));
+        public static LEDPattern BREATHE_COLOR = LEDPattern.gradient(GradientType.kDiscontinuous,
+                setBrightness(Color.kOrangeRed, 0.69 * 0.8), setBrightness(Color.kRed, 0.69 * 0.8),
+                setBrightness(Color.kDarkRed, 0.69 * 0.8));
+    }
+
+
+    public static class Intake {
+        public static int INTAKE_LEADER_MOTOR_PORT = 16;
+        public static double INTAKE_SPEED = 0.13;
+        public static double INTAKE_TIME = 0.5;
+    }
+
+    public static class Controlls {
+        public static CommandPS5Controller DRIVER_CONTROLLER = new CommandPS5Controller(OI.DRIVER_CONTROLLER_PORT);
+        public static CommandXboxController OPERATOR_CONTROLLER = new CommandXboxController(
+                OI.OPERATOR_CONTROLLER_PORT);
+
+        public static Trigger INTAKE = Controlls.DRIVER_CONTROLLER.L1();
+    }
+
+    public static class EnabledParts {
+        public static boolean IS_LED_ENABLED = true;
+        public static boolean IS_SWERVE_ENABLED = true;
+        public static boolean IS_INTAKE_ENABLED = true;
+    }
+
+    public static final class OI {
+        public static int DRIVER_CONTROLLER_PORT = 0;
+        public static int OPERATOR_CONTROLLER_PORT = 1;
+        public static String SWERVE_CANBUS_STRING = "rio";
+        public static String RIO_CANBUS_STRING = "rio";
+        public static boolean IS_TEST = false;
+        public static boolean IS_PROCESSING = false;
+        public static boolean IS_PID_ENDED = false;
+        public static boolean IS_SWERVE_FOCUSED = false;
+        public static boolean IS_INTAKING = false;
+        public static boolean IS_LED_CYCLING = false;
+        public static boolean IS_LED_MORSE_SHOWING = false;
+        public static boolean IS_FOCUSED = false;
+        public static boolean IS_GONE = false;
+        public static double LIMELIGHT_SPEED = 0.4;
+    }
+}
