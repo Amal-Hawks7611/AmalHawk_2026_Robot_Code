@@ -65,9 +65,9 @@ public final class Constants {
     }
 
     public static class EnabledParts {
-        public static boolean IS_LED_ENABLED = true;
+        public static boolean IS_LED_ENABLED = false;
         public static boolean IS_SWERVE_ENABLED = true;
-        public static boolean IS_INTAKE_ENABLED = true;
+        public static boolean IS_INTAKE_ENABLED = false;
     }
 
     public static final class OI {

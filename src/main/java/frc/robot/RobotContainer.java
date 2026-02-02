@@ -64,7 +64,7 @@ public class RobotContainer {
         SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> driverPs5.getLeftY(),
                         () -> driverPs5.getLeftX())
-                        .withControllerRotationAxis(() -> -driverPs5.getRawAxis(
+                        .withControllerRotationAxis(() -> driverPs5.getRawAxis(
                                         2))
                         .deadband(OperatorConstants.DEADBAND)
                         .scaleTranslation(0.8)
