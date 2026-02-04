@@ -52,7 +52,7 @@ public final class Constants {
 
     public static class Intake {
         public static int INTAKE_LEADER_MOTOR_PORT = 16;
-        public static double INTAKE_SPEED = 0.13;
+        public static double INTAKE_SPEED = 0.7;
         public static double INTAKE_TIME = 0.5;
     }
 
@@ -67,7 +67,7 @@ public final class Constants {
     public static class EnabledParts {
         public static boolean IS_LED_ENABLED = false;
         public static boolean IS_SWERVE_ENABLED = true;
-        public static boolean IS_INTAKE_ENABLED = false;
+        public static boolean IS_INTAKE_ENABLED = true;
     }
 
     public static final class OI {
