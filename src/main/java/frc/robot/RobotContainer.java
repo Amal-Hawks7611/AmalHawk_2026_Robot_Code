@@ -64,7 +64,7 @@ public class RobotContainer {
         SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> driverPs5.getLeftY(),
                         () -> driverPs5.getLeftX())
-                        .withControllerRotationAxis(() -> driverPs5.getRawAxis(
+                        .withControllerRotationAxis(() -> -driverPs5.getRawAxis(
                                         2))
                         .deadband(OperatorConstants.DEADBAND)
                         .scaleTranslation(0.8)
@@ -101,15 +101,19 @@ public class RobotContainer {
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
+                configureButtonBindings();
         }
 
         private void configureBindings() {
                 Command driveFieldOrientedCommand = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
                 drivebase.setDefaultCommand(driveFieldOrientedCommand);
+
+
         }
 
         public void configureButtonBindings() {
-                Controlls.INTAKE.whileTrue(f_intake);
+
+                Controlls.INTAKE.toggleOnTrue(f_intake);
         }
 
         public Command getAutonomousCommand() {

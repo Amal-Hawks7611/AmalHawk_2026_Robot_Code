@@ -8,6 +8,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -19,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Timer timer = new Timer();
 
     public IntakeSubsystem(RobotContainer container) {
-        leaderMotor = new TalonFX(Intake.INTAKE_LEADER_MOTOR_PORT);
+        leaderMotor = new TalonFX(Intake.INTAKE_LEADER_MOTOR_PORT, new CANBus("arch"));
         leaderMotorPosition = leaderMotor.getPosition();
         this.container = container;
         resetEncoders();
