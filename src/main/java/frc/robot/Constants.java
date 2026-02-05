@@ -55,19 +55,31 @@ public final class Constants {
         public static double INTAKE_SPEED = 0.7;
         public static double INTAKE_TIME = 0.5;
     }
-
+    public static class IntakeArm {
+        public static int INTAKE_ARM_LEADER_PORT = 17;
+        public static int INTAKE_ARM_SLAVE_PORT = 18;
+        public static double INTAKE_SETPOINT = 50;
+        public static double INTAKE_ARM_MANUAL_SPEED = 0.3;
+        public static double INTAKE_OCALPID_SPEED = 0.4;
+        public static double OCALPID_TOLERANCE_VALUE = 0.1;
+        public static double TOP_BREAK = 0.6;
+        public static double DOWN_BREAK = 0.1;
+    }
     public static class Controlls {
         public static CommandPS5Controller DRIVER_CONTROLLER = new CommandPS5Controller(OI.DRIVER_CONTROLLER_PORT);
         public static CommandXboxController OPERATOR_CONTROLLER = new CommandXboxController(
                 OI.OPERATOR_CONTROLLER_PORT);
 
         public static Trigger INTAKE = Controlls.DRIVER_CONTROLLER.L1();
+        public static Trigger INTAKE_ARM_UP = Controlls.DRIVER_CONTROLLER.R2();
+        public static Trigger INTAKE_ARM_DOWN = Controlls.DRIVER_CONTROLLER.L2();
     }
 
     public static class EnabledParts {
         public static boolean IS_LED_ENABLED = false;
         public static boolean IS_SWERVE_ENABLED = true;
         public static boolean IS_INTAKE_ENABLED = true;
+        public static boolean IS_INTAKE_ARM_ENABLED = true;
     }
 
     public static final class OI {
@@ -77,7 +89,6 @@ public final class Constants {
         public static String RIO_CANBUS_STRING = "rio";
         public static boolean IS_TEST = false;
         public static boolean IS_PROCESSING = false;
-        public static boolean IS_PID_ENDED = false;
         public static boolean IS_SWERVE_FOCUSED = false;
         public static boolean IS_INTAKING = false;
         public static boolean IS_LED_CYCLING = false;
