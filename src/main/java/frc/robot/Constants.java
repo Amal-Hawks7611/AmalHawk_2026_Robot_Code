@@ -59,11 +59,11 @@ public final class Constants {
         public static int INTAKE_ARM_LEADER_PORT = 17;
         public static int INTAKE_ARM_SLAVE_PORT = 18;
         public static double INTAKE_SETPOINT = 50;
-        public static double INTAKE_ARM_MANUAL_SPEED = 0.3;
-        public static double INTAKE_OCALPID_SPEED = 0.4;
-        public static double OCALPID_TOLERANCE_VALUE = 0.1;
-        public static double TOP_BREAK = 0.6;
-        public static double DOWN_BREAK = 0.1;
+        public static double INTAKE_ARM_MANUAL_SPEED = 0.03;
+        public static double INTAKE_OCALPID_SPEED = 0.04;
+        public static double OCALPID_TOLERANCE_VALUE = 0.05;
+        public static double TOP_BREAK = 0.06;
+        public static double DOWN_BREAK = 0.01;
     }
     public static class Controlls {
         public static CommandPS5Controller DRIVER_CONTROLLER = new CommandPS5Controller(OI.DRIVER_CONTROLLER_PORT);

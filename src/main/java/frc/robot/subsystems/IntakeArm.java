@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -14,8 +15,8 @@ public class IntakeArm extends SubsystemBase {
     public Timer timer;
     public boolean current_movement;
     public IntakeArm() {
-        leader_motor = new TalonFX(Constants.IntakeArm.INTAKE_ARM_LEADER_PORT);
-        slave_motor = new TalonFX(Constants.IntakeArm.INTAKE_ARM_SLAVE_PORT);
+        leader_motor = new TalonFX(Constants.IntakeArm.INTAKE_ARM_LEADER_PORT, new CANBus("arch"));
+        slave_motor = new TalonFX(Constants.IntakeArm.INTAKE_ARM_SLAVE_PORT, new CANBus("arch"));
         current_movement = true;
     }
     public double getLeaderEncoder(){return leader_motor.getPosition().getValueAsDouble();}
