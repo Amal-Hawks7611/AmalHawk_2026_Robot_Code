@@ -15,14 +15,15 @@ public class ArmUP extends Command {
 
     @Override
     public void initialize() {
+        if (frc.robot.Constants.IntakeArm.CAN_MOVE_UP){
         System.out.println("Intake Manual Moving Ininialized");
         OI.IS_PROCESSING = true;
-
+        }
     }
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_INTAKE_ARM_ENABLED) {
+        if (EnabledParts.IS_INTAKE_ARM_ENABLED && frc.robot.Constants.IntakeArm.CAN_MOVE_UP) {
             intakeArm.ArmUP();
         }
     }

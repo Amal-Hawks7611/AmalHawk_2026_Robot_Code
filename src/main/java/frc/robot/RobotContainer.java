@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Controlls;
 import frc.robot.commands.Intake.ArmDOWN;
 import frc.robot.commands.Intake.ArmUP;
+import frc.robot.commands.Intake.ArmPID;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.commands.Led.LEDMorseScroller;
 import frc.robot.commands.Led.LEDStateCycler;
@@ -33,8 +34,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
 
         private final SendableChooser<Command> autoChooser;
-        public final SwerveSubsystem drivebase = new SwerveSubsystem(
-                        new File(Filesystem.getDeployDirectory(), "swerve"));
+        public final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
         public final LimelightSubsystem limelight = new LimelightSubsystem();
         public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(this);
         public final StatusLED ledSubsystem = new StatusLED();
@@ -49,24 +49,10 @@ public class RobotContainer {
         public final Intake f_intake;
         public final ArmUP arm_up;
         public final ArmDOWN arm_down;
+        public final ArmPID arm_pid;
 
         public final LEDStateCycler led_cycle;
         public final LEDMorseScroller led_morse;
-
-        SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                        () -> driverPs5.getLeftY()  * 0.8,
-                        () -> -driverPs5.getLeftX()  * 0.8)
-                        .withControllerRotationAxis(driverPs5::getRightX)
-                        .deadband(OperatorConstants.DEADBAND)
-                        .scaleTranslation(0.8)
-                        .allianceRelativeControl(true);
-
-        SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverPs5::getRightX,
-                        driverPs5::getRightY)
-                        .headingWhile(true);
-
-        SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-                        .allianceRelativeControl(false);
 
         SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> driverPs5.getLeftY(),
@@ -76,25 +62,8 @@ public class RobotContainer {
                         .deadband(OperatorConstants.DEADBAND)
                         .scaleTranslation(0.8)
                         .allianceRelativeControl(true);
-        SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
-                        .withControllerHeadingAxis(() -> Math.sin(
-                                        driverPs5.getRawAxis(
-                                                        2) *
-                                                        Math.PI)
-                                        *
-                                        (Math.PI *
-                                                        2),
-                                        () -> Math.cos(
-                                                        driverPs5.getRawAxis(
-                                                                        2) *
-                                                                        Math.PI)
-                                                        *
-                                                        (Math.PI *
-                                                                        2))
-                        .headingWhile(true);
 
         public RobotContainer() {
-                configureBindings();
                 DriverStation.silenceJoystickConnectionWarning(true);
                 NamedCommands.registerCommand("fIntake", new Intake(intakeSubsystem));
                 zerogyro = new InstantCommand(() -> drivebase.zeroGyro());
@@ -106,6 +75,7 @@ public class RobotContainer {
                 f_intake = new Intake(intakeSubsystem);
                 arm_down = new ArmDOWN(intakeArm);
                 arm_up = new ArmUP(intakeArm);
+                arm_pid = new ArmPID(intakeArm);
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
@@ -115,14 +85,13 @@ public class RobotContainer {
         private void configureBindings() {
                 Command driveFieldOrientedCommand = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
                 drivebase.setDefaultCommand(driveFieldOrientedCommand);
-
-
         }
 
         public void configureButtonBindings() {
                 Controlls.INTAKE.toggleOnTrue(f_intake);
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
+                Controlls.Intake_ARM_PID.toggleOnTrue(admin);
         }
 
         public Command getAutonomousCommand() {

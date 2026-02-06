@@ -50,8 +50,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void OcalPID() {
-        if (Math.abs(
-                Constants.IntakeArm.INTAKE_SETPOINT - getLeaderEncoder()) < Constants.IntakeArm.OCALPID_TOLERANCE_VALUE
+        if (Math.abs(Constants.IntakeArm.INTAKE_SETPOINT - getLeaderEncoder()) < Constants.IntakeArm.OCALPID_TOLERANCE_VALUE
                 &&
                 getLeaderEncoder() < Constants.IntakeArm.INTAKE_SETPOINT && OI.IS_PROCESSING) {
             leader_motor.set(Constants.IntakeArm.INTAKE_OCALPID_SPEED);
@@ -62,30 +61,31 @@ public class IntakeArm extends SubsystemBase {
         }
     }
 
-    public void startPeriodic() {
-        leader_motor.set(current_movement ? Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED
-                : -Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED);
-        slave_motor.set(current_movement ? Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED
-                : -Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED);
-    }
-
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("IsIntakeArmProcessing", OI.IS_PROCESSING);
+        SmartDashboard.putNumber("LeaderEncoder", getLeaderEncoder());
+        SmartDashboard.putNumber("SlaveEncoder", getSlaveEncoder());
+        SmartDashboard.putBoolean("CanMoveUp", frc.robot.Constants.IntakeArm.CAN_MOVE_UP);
+        SmartDashboard.putBoolean("CanMoveDown", frc.robot.Constants.IntakeArm.CAN_MOVE_DOWN);
 
-        if (getLeaderEncoder() >= Constants.IntakeArm.TOP_BREAK ||
-                getLeaderEncoder() <= Constants.IntakeArm.DOWN_BREAK) {
-            OI.IS_PROCESSING = false;
+        if (getLeaderEncoder() >= Constants.IntakeArm.TOP_BREAK) {
+                Constants.IntakeArm.CAN_MOVE_UP = false;
+                StopMotors();
+        }
+        else if(getLeaderEncoder() <= Constants.IntakeArm.DOWN_BREAK){
+            Constants.IntakeArm.CAN_MOVE_DOWN = false;
             StopMotors();
         }
-
-        if (!OI.IS_PROCESSING) {
+        else{
+            Constants.IntakeArm.CAN_MOVE_DOWN = true;
+            Constants.IntakeArm.CAN_MOVE_UP = true;
+            if (!OI.IS_PROCESSING) {
             double time = Timer.getFPGATimestamp();
-            double wiggle = Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED * Math.sin(time * 15.0);
-            leader_motor.set(wiggle);
-            slave_motor.set(wiggle);
-        } else {
-            StopMotors();
+            double wiggle = Constants.IntakeArm.INTAKE_PRD_SPEED * Math.sin(time * 4.0);
+            leader_motor.set(-wiggle);
+            slave_motor.set(-wiggle);
+            }
         }
     }
 }

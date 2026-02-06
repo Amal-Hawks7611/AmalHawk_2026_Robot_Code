@@ -29,7 +29,6 @@ public class StatusLED extends SubsystemBase {
 
     public void setDefault() {
         if (led == null || buffer == null) {
-            System.err.println("LED or buffer is not initialized!");
             return;
         }
         LEDPattern pattern = LedSubsystem.BREATHE_COLOR.breathe(Units.Seconds.of(LedSubsystem.BREATHE_MAGNITUDE));
@@ -45,7 +44,6 @@ public class StatusLED extends SubsystemBase {
 
     public void setProcess() {
         if (led == null || buffer == null) {
-            System.err.println("LED or buffer is not initialized!");
             return;
         }
         LedSubsystem.ELEVATOR_PROCESS_COLOR.applyTo(buffer);
@@ -55,7 +53,6 @@ public class StatusLED extends SubsystemBase {
 
     public void setFocus() {
         if (led == null || buffer == null) {
-            System.err.println("LED or buffer is not initialized!");
             return;
         }
         LedSubsystem.TARGET_FOCUS_COLOR.applyTo(buffer);
@@ -65,7 +62,6 @@ public class StatusLED extends SubsystemBase {
 
     public void setAlgeaIntake() {
         if (led == null || buffer == null) {
-            System.err.println("LED or buffer is not initialized!");
             return;
         }
         LedSubsystem.ALGEA_INTAKE_COLOR.applyTo(buffer);
@@ -75,7 +71,6 @@ public class StatusLED extends SubsystemBase {
 
     public void setIntake() {
         if (led == null || buffer == null) {
-            System.err.println("LED or buffer is not initialized!");
             return;
         }
         LedSubsystem.INTAKE_COLOR.applyTo(buffer);

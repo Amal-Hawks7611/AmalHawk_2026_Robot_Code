@@ -5,26 +5,25 @@ import frc.robot.Constants.EnabledParts;
 import frc.robot.Constants.OI;
 import frc.robot.subsystems.IntakeArm;
 
-public class ArmDOWN extends Command {
+public class ArmPID extends Command {
     public final IntakeArm intakeArm;
 
-    public ArmDOWN(IntakeArm intakeArm) {
+    public ArmPID(IntakeArm intakeArm) {
         this.intakeArm = intakeArm;
         addRequirements(intakeArm);
     }
 
     @Override
     public void initialize() {
-        if (frc.robot.Constants.IntakeArm.CAN_MOVE_DOWN){
         System.out.println("Intake Manual Moving Ininialized");
         OI.IS_PROCESSING = true;
-        }
+
     }
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_INTAKE_ARM_ENABLED && frc.robot.Constants.IntakeArm.CAN_MOVE_DOWN) {
-            intakeArm.ArmDOWN();
+        if (EnabledParts.IS_INTAKE_ARM_ENABLED && frc.robot.Constants.IntakeArm.CAN_MOVE_DOWN && frc.robot.Constants.IntakeArm.CAN_MOVE_UP) {
+            intakeArm.OcalPID();
         }
     }
 
