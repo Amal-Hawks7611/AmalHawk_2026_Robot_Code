@@ -15,20 +15,21 @@ public class ArmPID extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Intake Manual Moving Ininialized");
+        System.out.println("Intake PID Moving Ininialized");
         OI.IS_PROCESSING = true;
 
     }
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_INTAKE_ARM_ENABLED && frc.robot.Constants.IntakeArm.CAN_MOVE_DOWN && frc.robot.Constants.IntakeArm.CAN_MOVE_UP) {
+        if (EnabledParts.IS_INTAKE_ARM_ENABLED && frc.robot.Constants.IntakeArm.CAN_MOVE_DOWN) {
             intakeArm.OcalPID();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("PID ENDED.");
         intakeArm.StopMotors();
         OI.IS_PROCESSING = false;
     }

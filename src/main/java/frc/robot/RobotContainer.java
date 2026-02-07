@@ -91,7 +91,7 @@ public class RobotContainer {
                 Controlls.INTAKE.toggleOnTrue(f_intake);
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
-                Controlls.Intake_ARM_PID.toggleOnTrue(admin);
+                Controlls.Intake_ARM_PID.toggleOnTrue(arm_pid);
         }
 
         public Command getAutonomousCommand() {

@@ -35,6 +35,6 @@ public class Intake extends Command {
 
     @Override
     public boolean isFinished() {
-        return !OI.IS_INTAKING;
+        return false;
     }
 }

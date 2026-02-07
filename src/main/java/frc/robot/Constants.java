@@ -56,14 +56,14 @@ public final class Constants {
         public static double INTAKE_TIME = 0.5;
     }
     public static class IntakeArm {
-        public static int INTAKE_ARM_LEADER_PORT = 17;
-        public static int INTAKE_ARM_SLAVE_PORT = 18;
-        public static double INTAKE_SETPOINT = 50;
-        public static double INTAKE_ARM_MANUAL_SPEED = 0.3;
-        public static double INTAKE_OCALPID_SPEED = 0.02;
-        public static double OCALPID_TOLERANCE_VALUE = 0.05;
-        public static double TOP_BREAK = -0.1;
-        public static double DOWN_BREAK = -0.45;
+        public static int INTAKE_ARM_LEADER_PORT = 18;
+        public static int INTAKE_ARM_SLAVE_PORT = 17;
+        public static double INTAKE_SETPOINT = 9;
+        public static double INTAKE_ARM_MANUAL_SPEED = 0.15;
+        public static double INTAKE_OCALPID_SPEED = 0.1;
+        public static double OCALPID_TOLERANCE_VALUE = 0.5;
+        public static double TOP_BREAK = 0.1;
+        public static double DOWN_BREAK = 11.7;
         public static double INTAKE_PRD_SPEED = 0.15;
         public static boolean CAN_MOVE_UP = true;
         public static boolean CAN_MOVE_DOWN = true;
