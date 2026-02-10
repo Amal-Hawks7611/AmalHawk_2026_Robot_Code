@@ -10,6 +10,7 @@ public class Intake extends Command {
 
     public Intake(IntakeSubsystem intakeSubsystem) {
         this.intakeSubsystem = intakeSubsystem;
+        OI.IS_INTAKING = true;
         addRequirements(intakeSubsystem);
     }
 
@@ -35,6 +36,6 @@ public class Intake extends Command {
 
     @Override
     public boolean isFinished() {
-        return !OI.IS_INTAKING;
+        return false;
     }
 }

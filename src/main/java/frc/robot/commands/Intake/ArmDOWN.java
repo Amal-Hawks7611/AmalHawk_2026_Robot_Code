@@ -15,14 +15,15 @@ public class ArmDOWN extends Command {
 
     @Override
     public void initialize() {
+        if (intakeArm.getCanMoveDown()){
         System.out.println("Intake Manual Moving Ininialized");
         OI.IS_PROCESSING = true;
-
+        }
     }
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_INTAKE_ARM_ENABLED) {
+        if (EnabledParts.IS_INTAKE_ARM_ENABLED && intakeArm.getCanMoveDown()) {
             intakeArm.ArmDOWN();
         }
     }

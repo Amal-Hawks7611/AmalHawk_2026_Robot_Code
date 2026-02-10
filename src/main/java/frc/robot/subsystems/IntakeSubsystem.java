@@ -40,7 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("IsCoralIntaking", OI.IS_INTAKING);
+        SmartDashboard.putBoolean("IsIntaking", OI.IS_INTAKING);
         SmartDashboard.putNumber("Intake Leader Motor Value", getLeaderMotorEncoder());
         SmartDashboard.putNumber("IntakeSPeed", leaderMotor.get());
     }

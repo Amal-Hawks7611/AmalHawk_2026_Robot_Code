@@ -56,14 +56,22 @@ public final class Constants {
         public static double INTAKE_TIME = 0.5;
     }
     public static class IntakeArm {
-        public static int INTAKE_ARM_LEADER_PORT = 17;
-        public static int INTAKE_ARM_SLAVE_PORT = 18;
-        public static double INTAKE_SETPOINT = 50;
-        public static double INTAKE_ARM_MANUAL_SPEED = 0.03;
-        public static double INTAKE_OCALPID_SPEED = 0.04;
-        public static double OCALPID_TOLERANCE_VALUE = 0.05;
-        public static double TOP_BREAK = 0.06;
-        public static double DOWN_BREAK = 0.01;
+        public static int INTAKE_ARM_LEADER_PORT = 18;
+        public static int INTAKE_ARM_SLAVE_PORT = 17;
+        public static double INTAKE_SETPOINT = 9;
+        public static double INTAKE_ARM_MANUAL_SPEED = 0.15;
+        public static double INTAKE_OCALPID_SPEED = 0.05;
+        public static double OCALPID_TOLERANCE_VALUE = 0.5;
+        public static class Leader {
+            public static double TOP_LIMIT = 0.4;
+            public static double DOWN_LIMIT = 9.7;
+            public static double MIDDLE_LIMIT = 5.4;
+           }
+        public static class Slave {
+            public static double TOP_LIMIT = 1.1;
+            public static double DOWN_LIMIT = 9.7;
+            public static double MIDDLE_LIMIT = 5.45;
+           }
     }
     public static class Controlls {
         public static CommandPS5Controller DRIVER_CONTROLLER = new CommandPS5Controller(OI.DRIVER_CONTROLLER_PORT);
@@ -73,6 +81,7 @@ public final class Constants {
         public static Trigger INTAKE = Controlls.DRIVER_CONTROLLER.L1();
         public static Trigger INTAKE_ARM_UP = Controlls.DRIVER_CONTROLLER.R2();
         public static Trigger INTAKE_ARM_DOWN = Controlls.DRIVER_CONTROLLER.L2();
+        public static Trigger Intake_ARM_PID = Controlls.DRIVER_CONTROLLER.cross();
     }
 
     public static class EnabledParts {
@@ -82,7 +91,7 @@ public final class Constants {
         public static boolean IS_INTAKE_ARM_ENABLED = true;
     }
 
-    public static final class OI {
+    public static class OI {
         public static int DRIVER_CONTROLLER_PORT = 0;
         public static int OPERATOR_CONTROLLER_PORT = 1;
         public static String SWERVE_CANBUS_STRING = "rio";

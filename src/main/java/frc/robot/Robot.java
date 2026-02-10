@@ -45,7 +45,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer.drivebase.zeroGyro();
-
     if (!RobotBase.isSimulation()) {
       if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         LedSubsystem.BREATHE_COLOR = LEDPattern.gradient(GradientType.kDiscontinuous,
