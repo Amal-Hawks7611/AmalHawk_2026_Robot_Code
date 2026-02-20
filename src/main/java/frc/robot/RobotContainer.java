@@ -20,6 +20,7 @@ import frc.robot.commands.Feeder.Feeder;
 import frc.robot.commands.Intake.ArmDOWN;
 import frc.robot.commands.Intake.ArmUP;
 import frc.robot.commands.Intake.ArmPID;
+import frc.robot.commands.Intake.ArmInitializeDown;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.commands.Led.LEDMorseScroller;
 import frc.robot.commands.Led.LEDStateCycler;
@@ -59,6 +60,7 @@ public class RobotContainer {
         public final ArmUP arm_up;
         public final ArmDOWN arm_down;
         public final ArmPID arm_pid;
+        public final ArmInitializeDown arm_initialize_down;
 
         public final Feeder feed;
         public final stage1 shooterStage1;
@@ -94,6 +96,7 @@ public class RobotContainer {
                 arm_down = new ArmDOWN(intakeArm);
                 arm_up = new ArmUP(intakeArm);
                 arm_pid = new ArmPID(intakeArm);
+                arm_initialize_down = new ArmInitializeDown(intakeArm);
 
                 feed = new Feeder(feederSubsystem);
                 shooterStage1 = new stage1(shooterSubsystem);
@@ -109,7 +112,6 @@ public class RobotContainer {
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
-                configureButtonBindings();
         }
 
         private void configureBindings() {
@@ -125,6 +127,7 @@ public class RobotContainer {
                 Controlls.STAGE_1.onChange(feedandshoots1);
                 Controlls.STAGE_2.onChange(feedandshoots2);
                 Controlls.STAGE_3.onChange(feedandshoots3);
+                Controlls.ZERO_GYRO.onChange(zerogyro);
         }
 
         public Command getAutonomousCommand() {

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import swervelib.math.Matter;
 
 public final class Constants {
-    public static final double ROBOT_MASS = 104.72 * 0.453592; // TODO GİRİLECEK
+    public static final double ROBOT_MASS = 104.72 * 0.453592;  //TODO GİR
     public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME = 0.13; 
     public static final double MAX_SPEED = 3;
@@ -72,9 +72,9 @@ public final class Constants {
         public static int INTAKE_ARM_LEADER_PORT = 19;
         public static int INTAKE_ARM_SLAVE_PORT = 20;
         public static double INTAKE_SETPOINT = 9;
-        public static double INTAKE_ARM_MANUAL_SPEED = 0.15;
-        public static double INTAKE_OCALPID_SPEED = -0.05; 
-        public static double OCALPID_TOLERANCE_VALUE = 0.5;
+        public static double INTAKE_ARM_MANUAL_SPEED = 0.15; 
+        public static double INTAKE_OCALPID_SPEED = 0.1; 
+        public static double OCALPID_TOLERANCE_VALUE = 0.1; 
         public static class Leader {
             public static double TOP_LIMIT = 0.05;
             public static double DOWN_LIMIT = 9.36;
@@ -97,6 +97,7 @@ public final class Constants {
         public static Trigger STAGE_1 = Controlls.DRIVER_CONTROLLER.cross();
         public static Trigger STAGE_2 = Controlls.DRIVER_CONTROLLER.circle();
         public static Trigger STAGE_3 = Controlls.DRIVER_CONTROLLER.triangle();
+        public static Trigger ZERO_GYRO = Controlls.DRIVER_CONTROLLER.PS();
     }
 
     public static class EnabledParts {

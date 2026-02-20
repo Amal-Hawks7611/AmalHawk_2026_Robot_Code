@@ -26,6 +26,9 @@ public class IntakeArm extends SubsystemBase {
         leader_motor.setPosition(0);
         slave_motor.setPosition(0);
         current_movement = true;
+        
+        leader_motor.setNeutralMode(com.ctre.phoenix6.signals.NeutralModeValue.Brake);
+        slave_motor.setNeutralMode(com.ctre.phoenix6.signals.NeutralModeValue.Brake);
     }
 
     public double getLeaderEncoder() {
@@ -100,26 +103,22 @@ public class IntakeArm extends SubsystemBase {
         SmartDashboard.putBoolean("PID", isPidActive);
         double pos = getLeaderEncoder();
         double s_pos = getSlaveEncoder();
+        
         if(!OI.IS_PROCESSING){
-            if (pos < Leader.TOP_LIMIT){
-                // leader_motor.set(-0.15);
-            }
-            if (s_pos < Slave.TOP_LIMIT){
-               //  slave_motor.set(-0.15);
-            }
-
             if (pos > Leader.DOWN_LIMIT){
-                // leader_motor.set(0.15);
+                leader_motor.set(-0.2); 
+            } else if (pos < Leader.TOP_LIMIT){
+                leader_motor.set(0.2); 
+            } else {
+                leader_motor.set(0); 
             }
+            
             if (s_pos > Slave.DOWN_LIMIT){
-                // slave_motor.set(0.15);
-            }
-
-            if(pos < Leader.DOWN_LIMIT && pos > Leader.TOP_LIMIT) {
-                leader_motor.set(0);
-            }
-            if(s_pos < Slave.DOWN_LIMIT && s_pos > Slave.TOP_LIMIT) {
-                 slave_motor.set(0);
+                slave_motor.set(-0.2); 
+            } else if (s_pos < Slave.TOP_LIMIT){
+                slave_motor.set(0.2); 
+            } else {
+                slave_motor.set(0); 
             }
         }
 
