@@ -103,25 +103,6 @@ public class IntakeArm extends SubsystemBase {
         SmartDashboard.putBoolean("PID", isPidActive);
         double pos = getLeaderEncoder();
         double s_pos = getSlaveEncoder();
-        
-        if(!OI.IS_PROCESSING){
-            if (pos > Leader.DOWN_LIMIT){
-                leader_motor.set(-0.2); 
-            } else if (pos < Leader.TOP_LIMIT){
-                leader_motor.set(0.2); 
-            } else {
-                leader_motor.set(0); 
-            }
-            
-            if (s_pos > Slave.DOWN_LIMIT){
-                slave_motor.set(-0.2); 
-            } else if (s_pos < Slave.TOP_LIMIT){
-                slave_motor.set(0.2); 
-            } else {
-                slave_motor.set(0); 
-            }
-        }
-
         if(pos < Leader.TOP_LIMIT + 1.5 || s_pos < Slave.TOP_LIMIT + 1.5){
             canMoveUp = false;
         }else{canMoveUp = true;}

@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    CommandScheduler.getInstance().schedule(m_robotContainer.arm_initialize_down);
+    // CommandScheduler.getInstance().schedule(m_robotContainer.arm_initialize_down);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.setMotorBrake(true);
     if (m_autonomousCommand != null) {
@@ -92,7 +92,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().schedule(m_robotContainer.arm_initialize_down);
+    // CommandScheduler.getInstance().schedule(m_robotContainer.arm_initialize_down);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

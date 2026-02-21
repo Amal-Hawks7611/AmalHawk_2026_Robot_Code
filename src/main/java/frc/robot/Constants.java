@@ -52,13 +52,14 @@ public final class Constants {
 
     public static class Intake {
         public static int INTAKE_LEADER_MOTOR_PORT = 16;
-        public static double INTAKE_SPEED = 0.7;
+        public static double INTAKE_SPEED = 0.5;
         public static double INTAKE_TIME = 0.5;
     }
     public static class Feeder {
         public static int FEEDER_LEADER_MOTOR_PORT = 21;
-        public static double FEEDER_SPEED = 0.8;
-        public static double FEEDER_TIME = 9;
+        public static double FEEDER_SPEED = 1;
+        public static double FEEDER_PERIODIC_SPEED = 0.1;
+        public static double FEEDER_TIME = 9.6;
     }
     public static class Shooter {
         public static int SHOOTER_LEADER_PORT = 22;
@@ -77,12 +78,12 @@ public final class Constants {
         public static double OCALPID_TOLERANCE_VALUE = 0.1; 
         public static class Leader {
             public static double TOP_LIMIT = 0.05;
-            public static double DOWN_LIMIT = 9.36;
+            public static double DOWN_LIMIT = 10.3;
         }
 
         public static class Slave {
             public static double TOP_LIMIT = 0.05;
-            public static double DOWN_LIMIT = 8.64;
+            public static double DOWN_LIMIT = 11.1;
         }
     }
     public static class Controlls {

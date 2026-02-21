@@ -54,6 +54,7 @@ public class ArmInitializeDown extends Command {
     public void end(boolean interrupted) {
         System.out.println("Arm initialization completed");
         OI.IS_PROCESSING = false;
+        intakeArm.setIsPidActive(false);
         intakeArm.StopMotors();
     }
 

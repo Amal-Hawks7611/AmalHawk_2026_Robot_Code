@@ -66,6 +66,7 @@ public class RobotContainer {
         public final stage1 shooterStage1;
         public final stage2 shooterStage2;
         public final stage3 shooterStage3;
+        public final ParallelCommandGroup intakeandshoot;
 
         public final ParallelCommandGroup feedandshoots1;
         public final ParallelCommandGroup feedandshoots2;
@@ -108,7 +109,7 @@ public class RobotContainer {
                                 new Feeder(feederSubsystem), new stage2(shooterSubsystem));
                 feedandshoots3 = new ParallelCommandGroup(
                                 new Feeder(feederSubsystem), new stage3(shooterSubsystem));
-
+                intakeandshoot = new ParallelCommandGroup(new Feeder(feederSubsystem), new Intake(intakeSubsystem));
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
@@ -120,11 +121,11 @@ public class RobotContainer {
         }
 
         public void configureButtonBindings() {
-                Controlls.INTAKE.toggleOnTrue(f_intake);
+                Controlls.INTAKE.whileTrue(f_intake);
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
                 Controlls.Intake_ARM_PID.onChange(arm_pid);
-                Controlls.STAGE_1.onChange(feedandshoots1);
+                Controlls.STAGE_1.whileTrue(feed);
                 Controlls.STAGE_2.onChange(feedandshoots2);
                 Controlls.STAGE_3.onChange(feedandshoots3);
                 Controlls.ZERO_GYRO.onChange(zerogyro);
