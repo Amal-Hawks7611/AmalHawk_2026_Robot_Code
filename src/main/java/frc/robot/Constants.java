@@ -52,7 +52,7 @@ public final class Constants {
 
     public static class Intake {
         public static int INTAKE_LEADER_MOTOR_PORT = 16;
-        public static double INTAKE_SPEED = 0.5;
+        public static double INTAKE_SPEED = 0.7;
         public static double INTAKE_TIME = 0.5;
     }
     public static class Feeder {
@@ -75,6 +75,7 @@ public final class Constants {
         public static double INTAKE_SETPOINT = 9;
         public static double INTAKE_ARM_MANUAL_SPEED = 0.15; 
         public static double INTAKE_OCALPID_SPEED = 0.1; 
+        public static double PERIODIC_SPEED = 0.05;
         public static double OCALPID_TOLERANCE_VALUE = 0.1; 
         public static class Leader {
             public static double TOP_LIMIT = 0.05;

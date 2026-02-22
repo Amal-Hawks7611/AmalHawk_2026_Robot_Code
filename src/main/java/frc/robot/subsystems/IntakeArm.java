@@ -106,9 +106,14 @@ public class IntakeArm extends SubsystemBase {
         if(pos < Leader.TOP_LIMIT + 1.5 || s_pos < Slave.TOP_LIMIT + 1.5){
             canMoveUp = false;
         }else{canMoveUp = true;}
-
         if(pos > Leader.DOWN_LIMIT || s_pos > Slave.DOWN_LIMIT){
             canMoveDown = false;
         }else{canMoveDown = true;}
+        if(canMoveDown && !OI.IS_PROCESSING && !(pos < Leader.DOWN_LIMIT)){
+            leader_motor.set(-frc.robot.Constants.IntakeArm.PERIODIC_SPEED);
+        }
+        if(canMoveDown && !OI.IS_PROCESSING && !(s_pos < Slave.DOWN_LIMIT)){
+            slave_motor.set(frc.robot.Constants.IntakeArm.PERIODIC_SPEED);
+        }
     }
 }
