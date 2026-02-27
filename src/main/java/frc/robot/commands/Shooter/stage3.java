@@ -3,17 +3,19 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.EnabledParts;
-import frc.robot.Constants.Feeder;
 import frc.robot.Constants.Shooter;
+import frc.robot.subsystems.ColorSensors;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class stage3 extends Command {
     public final ShooterSubsystem shooterSubsystem;
+    public final ColorSensors colorSensors;
     public static Timer timer2;
-    public stage3(ShooterSubsystem shooterSubsystem) {
+    public stage3(ShooterSubsystem shooterSubsystem, ColorSensors colorSensors) {
         this.shooterSubsystem = shooterSubsystem;
+        this.colorSensors = colorSensors;
         timer2 = new Timer();
-        addRequirements(shooterSubsystem);
+        addRequirements(shooterSubsystem, colorSensors);
     }
 
     @Override
@@ -25,9 +27,9 @@ public class stage3 extends Command {
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_SHOOTER_ENABLED && timer2.hasElapsed(Shooter.SHOOTER_TIME-Feeder.FEEDER_TIME) & !timer2.hasElapsed(Shooter.SHOOTER_TIME)){
+        if (EnabledParts.IS_SHOOTER_ENABLED && colorSensors.isBallDetected()){
             shooterSubsystem.Shoot(Shooter.STAGE3_SPEED);
-        } else if ( timer2.hasElapsed(Shooter.SHOOTER_TIME)){
+        } else if ( !colorSensors.isBallDetected()){
            this.end(true);
         }
     }

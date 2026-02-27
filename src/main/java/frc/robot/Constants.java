@@ -57,7 +57,7 @@ public final class Constants {
     }
     public static class Feeder {
         public static int FEEDER_LEADER_MOTOR_PORT = 21;
-        public static double FEEDER_SPEED = 1;
+        public static double FEEDER_SPEED = 0.5;
         public static double FEEDER_PERIODIC_SPEED = 0.1;
         public static double FEEDER_TIME = 9.6;
     }
@@ -66,15 +66,16 @@ public final class Constants {
         public static int SHOOTER_SLAVE_PORT = 23;
         public static double STAGE1_SPEED = 0.5;
         public static double STAGE2_SPEED = 0.7;
-        public static double STAGE3_SPEED = 1;
+        public static double STAGE3_SPEED = 0.5;
         public static double SHOOTER_TIME = 10;
     }
     public static class IntakeArm {
         public static int INTAKE_ARM_LEADER_PORT = 19;
         public static int INTAKE_ARM_SLAVE_PORT = 20;
         public static double INTAKE_SETPOINT = 9;
+        public static double INTAKE_TOP_SETPOINT = 6;
         public static double INTAKE_ARM_MANUAL_SPEED = 0.1; 
-        public static double INTAKE_OCALPID_SPEED = 0.1; 
+        public static double INTAKE_OCALPID_SPEED = 0.2; 
         public static double PERIODIC_SPEED = 0.05;
         public static double OCALPID_TOLERANCE_VALUE = 0.1; 
         public static class Leader {
@@ -96,10 +97,11 @@ public final class Constants {
         public static Trigger INTAKE_ARM_UP = Controlls.DRIVER_CONTROLLER.R2();
         public static Trigger INTAKE_ARM_DOWN = Controlls.DRIVER_CONTROLLER.L2();
         public static Trigger Intake_ARM_PID = Controlls.DRIVER_CONTROLLER.povDown();
-        public static Trigger STAGE_1 = Controlls.DRIVER_CONTROLLER.cross();
-        public static Trigger STAGE_2 = Controlls.DRIVER_CONTROLLER.circle();
+        public static Trigger FEED = Controlls.DRIVER_CONTROLLER.cross();
         public static Trigger STAGE_3 = Controlls.DRIVER_CONTROLLER.triangle();
         public static Trigger ZERO_GYRO = Controlls.DRIVER_CONTROLLER.PS();
+        public static Trigger INTAKE_UP_PID = Controlls.DRIVER_CONTROLLER.povUp();
+        public static Trigger INDIR_KALDIR = Controlls.DRIVER_CONTROLLER.povRight();
     }
 
     public static class EnabledParts {

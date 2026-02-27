@@ -1,6 +1,7 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.ColorSensors;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -20,12 +21,11 @@ import frc.robot.commands.Feeder.Feeder;
 import frc.robot.commands.Intake.ArmDOWN;
 import frc.robot.commands.Intake.ArmUP;
 import frc.robot.commands.Intake.ArmPID;
+import frc.robot.commands.Intake.ArmPIDUP;
 import frc.robot.commands.Intake.ArmInitializeDown;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.commands.Led.LEDMorseScroller;
 import frc.robot.commands.Led.LEDStateCycler;
-import frc.robot.commands.Shooter.stage1;
-import frc.robot.commands.Shooter.stage2;
 import frc.robot.commands.Shooter.stage3;
 import frc.robot.commands.Trajectory.AutonPath;
 
@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import frc.robot.Constants.OperatorConstants;
 import java.io.File;
@@ -57,19 +58,18 @@ public class RobotContainer {
         public final Command admin;
 
         public final Intake f_intake;
+        public final ColorSensors colorSensors;
         public final ArmUP arm_up;
         public final ArmDOWN arm_down;
         public final ArmPID arm_pid;
+        public final ArmPIDUP arm_pid_up;
         public final ArmInitializeDown arm_initialize_down;
 
         public final Feeder feed;
-        public final stage1 shooterStage1;
-        public final stage2 shooterStage2;
         public final stage3 shooterStage3;
-        public final ParallelCommandGroup intakeandshoot;
-
-        public final ParallelCommandGroup feedandshoots1;
-        public final ParallelCommandGroup feedandshoots2;
+        public final InstantCommand clearevryshit;
+        public final ParallelCommandGroup intakeliindirkaldir;
+        public final SequentialCommandGroup indirkaldir;
         public final ParallelCommandGroup feedandshoots3;
 
         public final LEDStateCycler led_cycle;
@@ -97,19 +97,24 @@ public class RobotContainer {
                 arm_down = new ArmDOWN(intakeArm);
                 arm_up = new ArmUP(intakeArm);
                 arm_pid = new ArmPID(intakeArm);
+                arm_pid_up = new ArmPIDUP(intakeArm);
                 arm_initialize_down = new ArmInitializeDown(intakeArm);
+                clearevryshit = new InstantCommand(() -> CommandScheduler.getInstance().cancelAll());
 
                 feed = new Feeder(feederSubsystem);
-                shooterStage1 = new stage1(shooterSubsystem);
-                shooterStage2 = new stage2(shooterSubsystem);
-                shooterStage3 = new stage3(shooterSubsystem);
-
-                feedandshoots1 = new ParallelCommandGroup(new Feeder(feederSubsystem), new stage1(shooterSubsystem));
-                feedandshoots2 = new ParallelCommandGroup(
-                                new Feeder(feederSubsystem), new stage2(shooterSubsystem));
+                colorSensors = new ColorSensors();
+                shooterStage3 = new stage3(shooterSubsystem, colorSensors);
                 feedandshoots3 = new ParallelCommandGroup(
-                                new Feeder(feederSubsystem), new stage3(shooterSubsystem));
-                intakeandshoot = new ParallelCommandGroup(new Feeder(feederSubsystem), new Intake(intakeSubsystem));
+                               feed, 
+                               shooterStage3);
+                indirkaldir = new SequentialCommandGroup(
+                                new ArmPIDUP(intakeArm),
+                                new ArmPID(intakeArm));
+                intakeliindirkaldir = new ParallelCommandGroup(
+                                new Intake(intakeSubsystem),
+                                new SequentialCommandGroup(
+                                                new ArmPIDUP(intakeArm),
+                                                new ArmPID(intakeArm), clearevryshit));
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
@@ -125,10 +130,11 @@ public class RobotContainer {
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
                 Controlls.Intake_ARM_PID.onChange(arm_pid);
-                Controlls.STAGE_1.whileTrue(feed);
-                Controlls.STAGE_2.onChange(feedandshoots2);
                 Controlls.STAGE_3.onChange(feedandshoots3);
                 Controlls.ZERO_GYRO.onChange(zerogyro);
+                Controlls.FEED.whileTrue(new Feeder(feederSubsystem));
+                Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
+                Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
         }
 
         public Command getAutonomousCommand() {

@@ -51,8 +51,11 @@ public class FeederSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("ısFeeding", isFeeding);
         SmartDashboard.putNumber("Feeder Leader Motor Value", getLeaderMotorEncoder());
         SmartDashboard.putNumber("FeederSpeed", leaderMotor.get());
-        if(!isFeeding()){
-           // leaderMotor.set(Feeder.FEEDER_PERIODIC_SPEED);
+        if(!isFeeding() && container.intakeArm.getCanMoveUp()){
+           leaderMotor.set(Feeder.FEEDER_PERIODIC_SPEED);
+        }
+        if(!container.intakeArm.getCanMoveUp()){
+            leaderMotor.set(0);
         }
     }
 }

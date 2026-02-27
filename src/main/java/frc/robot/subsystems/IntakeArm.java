@@ -17,6 +17,7 @@ public class IntakeArm extends SubsystemBase {
     public Timer timer;
     public boolean current_movement;
     private boolean isPidActive = false;
+    private boolean isPidUpActive = false;
     private boolean canMoveDown = true;
     private boolean canMoveUp = true;
 
@@ -64,19 +65,42 @@ public class IntakeArm extends SubsystemBase {
             leader_motor.set(0);
             System.out.println("Leader stop");
             leaderStopped = true;
-        }else{leader_motor.set(frc.robot.Constants.IntakeArm.INTAKE_OCALPID_SPEED);}
+        }else{leader_motor.set(-frc.robot.Constants.IntakeArm.INTAKE_OCALPID_SPEED);}
         
         if(Math.abs(s_pos - Slave.DOWN_LIMIT-0.5) < frc.robot.Constants.IntakeArm.OCALPID_TOLERANCE_VALUE){
+            slave_motor.set(0);
+            System.out.println("Slave stop");
+            slaveStopped = true;
+        }else{slave_motor.set(-frc.robot.Constants.IntakeArm.INTAKE_OCALPID_SPEED);}
+        
+        if(leaderStopped && slaveStopped){
+            isPidActive = false;
+        }
+    }
+        public void OcalPIDUP() {
+        double pos = getLeaderEncoder();
+        double s_pos = getSlaveEncoder();
+        boolean leaderStopped = false;
+        boolean slaveStopped = false;
+        Leader.TOP_LIMIT = 3;
+        Slave.TOP_LIMIT = 3;
+     System.out.println(Math.abs(pos - frc.robot.Constants.IntakeArm.INTAKE_TOP_SETPOINT));
+        if(Math.abs(pos - frc.robot.Constants.IntakeArm.INTAKE_TOP_SETPOINT) < frc.robot.Constants.IntakeArm.OCALPID_TOLERANCE_VALUE){
+            leader_motor.set(0);
+            System.out.println("Leader stop");
+            leaderStopped = true;
+        }else{leader_motor.set(frc.robot.Constants.IntakeArm.INTAKE_OCALPID_SPEED);}
+        
+        if(Math.abs(s_pos - frc.robot.Constants.IntakeArm.INTAKE_TOP_SETPOINT) < frc.robot.Constants.IntakeArm.OCALPID_TOLERANCE_VALUE){
             slave_motor.set(0);
             System.out.println("Slave stop");
             slaveStopped = true;
         }else{slave_motor.set(frc.robot.Constants.IntakeArm.INTAKE_OCALPID_SPEED);}
         
         if(leaderStopped && slaveStopped){
-            isPidActive = false;
+            isPidUpActive = false;
         }
     }
-    
     public boolean getCanMoveUp(){
         return canMoveUp;
     }
@@ -92,6 +116,13 @@ public class IntakeArm extends SubsystemBase {
     public void setIsPidActive(boolean active){
         isPidActive = active;
     }
+        public boolean getIsPidUpActive(){
+        return isPidUpActive;
+    }
+    
+    public void setIsPidUpActive(boolean active){
+        isPidUpActive = active;
+    }
 
     @Override
     public void periodic() {
@@ -101,6 +132,7 @@ public class IntakeArm extends SubsystemBase {
         SmartDashboard.putBoolean("CanMoveUp", canMoveUp);
         SmartDashboard.putBoolean("CanMoveDown", canMoveDown);
         SmartDashboard.putBoolean("PID", isPidActive);
+        SmartDashboard.putBoolean("PIDUp", isPidUpActive);
         double pos = getLeaderEncoder();
         double s_pos = getSlaveEncoder();
         if(pos < Leader.TOP_LIMIT + 1.5 || s_pos < Slave.TOP_LIMIT + 1.5){
