@@ -11,6 +11,8 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.OI;
+import frc.robot.LimelightHelpers;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,11 +116,52 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    updateVisionOdometry();
   }
 
   @Override
   public void simulationPeriodic() {
+  }
+
+  private void updateVisionOdometry() {
+
+    LimelightHelpers.PoseEstimate megaTagEst = LimelightHelpers.getBotPoseEstimate_wpiBlue(OI.LL_NAME);
+
+    if (megaTagEst != null && isVisionValid(megaTagEst)) {
+      Pose2d visionPose = megaTagEst.pose;
+
+      double dist = megaTagEst.avgTagDist;
+      double transStdDev = 0.05 + (dist * 0.1);
+      double rotStdDev = 999.0;
+
+      if (megaTagEst.tagCount >= 2) {
+        rotStdDev = 0.3 + (dist * 0.2);
+      }
+
+      swerveDrive.addVisionMeasurement(
+          visionPose,
+          megaTagEst.timestampSeconds,
+          VecBuilder.fill(transStdDev, transStdDev, rotStdDev));
+
+      SmartDashboard.putNumber("Vision/MegaTag X", visionPose.getX());
+      SmartDashboard.putNumber("Vision/MegaTag Y", visionPose.getY());
+      SmartDashboard.putNumber("Vision/Tag Count", megaTagEst.tagCount);
+      SmartDashboard.putNumber("Vision/Avg Dist", megaTagEst.avgTagDist);
+      SmartDashboard.putBoolean("Vision/Valid", true);
+    } else {
+      SmartDashboard.putBoolean("Vision/Valid", false);
+    }
+  }
+
+  private boolean isVisionValid(LimelightHelpers.PoseEstimate est) {
+    if (est == null)
+      return false;
+
+    return est.tagCount >= 1 &&
+        est.avgTagArea > 0.4 &&
+        est.avgTagDist < 4.5 &&
+        est.pose.getX() > -1 && est.pose.getX() < 17 &&
+        est.pose.getY() > -1 && est.pose.getY() < 9;
   }
 
   public Command getAutonomousCommand(String pathName) {

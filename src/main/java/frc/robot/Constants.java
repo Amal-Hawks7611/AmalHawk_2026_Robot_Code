@@ -124,6 +124,7 @@ public final class Constants {
         public static int OPERATOR_CONTROLLER_PORT = 1;
         public static String SWERVE_CANBUS_STRING = "rio";
         public static String RIO_CANBUS_STRING = "rio";
+        public static String LL_NAME = "limelightplus";
         public static boolean IS_TEST = false;
         public static boolean IS_PROCESSING = false;
         public static boolean IS_SWERVE_FOCUSED = false;

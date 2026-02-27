@@ -7,11 +7,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
+import frc.robot.Constants.OI;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class LimelightSubsystem extends SubsystemBase {
-
-    private final String llName = "limelight";
     private final PIDController xPID = new PIDController(0.6, 0, 0);
     private final PIDController zPID = new PIDController(0.5, 0, 0);
     private final PIDController yawPID = new PIDController(0.02, 0, 0);
@@ -37,13 +36,13 @@ public class LimelightSubsystem extends SubsystemBase {
 
                 () -> {
 
-                    if (!LimelightHelpers.getTV(llName)) {
+                    if (!LimelightHelpers.getTV(OI.LL_NAME)) {
                         swerve.drive(new Translation2d(0, 0), 0, false);
                         SmartDashboard.putString("LL Status", "No Target");
                         return;
                     }
 
-                    double[] pose = LimelightHelpers.getTargetPose_RobotSpace(llName);
+                    double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
 
                     double currentDistance = pose[2];
 
@@ -84,7 +83,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double[] pose = LimelightHelpers.getTargetPose_RobotSpace(llName);
+        double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
 
         double currentDistance = pose[2];
 
