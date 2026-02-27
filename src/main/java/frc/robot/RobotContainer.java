@@ -6,6 +6,8 @@ import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.LogPlayerSubsystem;
+import frc.robot.subsystems.LoggerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -17,6 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Controlls;
+import frc.robot.commands.StartPlayingCommand;
+import frc.robot.commands.StartRecordingCommand;
+import frc.robot.commands.StopPlayingCommand;
+import frc.robot.commands.StopRecordingCommand;
 import frc.robot.commands.Feeder.Feeder;
 import frc.robot.commands.Intake.ArmDOWN;
 import frc.robot.commands.Intake.ArmUP;
@@ -45,12 +51,15 @@ public class RobotContainer {
         private final SendableChooser<Command> autoChooser;
         public final SwerveSubsystem drivebase = new SwerveSubsystem(
                         new File(Filesystem.getDeployDirectory(), "swerve"));
-        public final LimelightSubsystem limelight = new LimelightSubsystem();
         public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(this);
         public final StatusLED ledSubsystem = new StatusLED();
         public final IntakeArm intakeArm = new IntakeArm();
         public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(this);
         public final FeederSubsystem feederSubsystem = new FeederSubsystem(this);
+        public final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
+        public final LoggerSubsystem loggerSubsystem = new LoggerSubsystem(drivebase);
+        public final LogPlayerSubsystem playerSubsystem = new LogPlayerSubsystem(drivebase);
+
         public final AutonPath otonom_path = new AutonPath();
         public CommandPS5Controller driverPs5 = Controlls.DRIVER_CONTROLLER;
 
@@ -74,7 +83,6 @@ public class RobotContainer {
 
         public final LEDStateCycler led_cycle;
         public final LEDMorseScroller led_morse;
-
         SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> driverPs5.getLeftY(),
                         () -> driverPs5.getLeftX())
@@ -114,7 +122,7 @@ public class RobotContainer {
                                 new Intake(intakeSubsystem),
                                 new SequentialCommandGroup(
                                                 new ArmPIDUP(intakeArm),
-                                                new ArmPID(intakeArm), clearevryshit));
+                                                new ArmPID(intakeArm)));
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
@@ -135,6 +143,13 @@ public class RobotContainer {
                 Controlls.FEED.whileTrue(new Feeder(feederSubsystem));
                 Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
                 Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
+                Controlls.LIMELIGHT_DEHSET.onChange(limelightSubsystem.autoAlignAndApproach(drivebase, 10));
+
+                Controlls.START_LOG.onTrue(new StartRecordingCommand(loggerSubsystem, "auto_move_1"));
+                Controlls.STOP_LOG.onTrue(new StopRecordingCommand(loggerSubsystem));
+
+                Controlls.PLAY_LOG.onTrue(new StartPlayingCommand(playerSubsystem));
+                Controlls.STOP_PLAYING.onTrue(new StopPlayingCommand(playerSubsystem));
         }
 
         public Command getAutonomousCommand() {

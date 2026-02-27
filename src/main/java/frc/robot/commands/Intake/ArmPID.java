@@ -38,6 +38,6 @@ public class ArmPID extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !intakeArm.getIsPidActive();
     }
 }

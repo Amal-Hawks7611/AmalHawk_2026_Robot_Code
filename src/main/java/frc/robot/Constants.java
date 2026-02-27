@@ -102,6 +102,12 @@ public final class Constants {
         public static Trigger ZERO_GYRO = Controlls.DRIVER_CONTROLLER.PS();
         public static Trigger INTAKE_UP_PID = Controlls.DRIVER_CONTROLLER.povUp();
         public static Trigger INDIR_KALDIR = Controlls.DRIVER_CONTROLLER.povRight();
+        public static Trigger LIMELIGHT_DEHSET = Controlls.DRIVER_CONTROLLER.square();
+
+        public static Trigger START_LOG = Controlls.OPERATOR_CONTROLLER.povLeft();
+        public static Trigger STOP_LOG = Controlls.OPERATOR_CONTROLLER.povRight();
+        public static Trigger PLAY_LOG = Controlls.OPERATOR_CONTROLLER.a();
+        public static Trigger STOP_PLAYING = Controlls.OPERATOR_CONTROLLER.b();
     }
 
     public static class EnabledParts {

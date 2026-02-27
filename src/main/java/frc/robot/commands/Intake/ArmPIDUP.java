@@ -42,6 +42,6 @@ public class ArmPIDUP extends Command {
 
     @Override
     public boolean isFinished() {
-        return !OI.IS_PROCESSING;
+        return !intakeArm.getIsPidUpActive();
     }
 }
