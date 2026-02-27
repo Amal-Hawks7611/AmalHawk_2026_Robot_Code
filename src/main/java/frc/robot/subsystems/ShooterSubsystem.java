@@ -61,8 +61,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("isShooting", isShooting);
-        SmartDashboard.putNumber("Feeder Leader Motor Value", getLeaderMotorEncoder());
-        SmartDashboard.putNumber("Feeder Slave  Motor Value", getSlaveMotorEncoder());
-        SmartDashboard.putNumber("FeederSpeed", leaderMotor.get());
+        SmartDashboard.putNumber("Shooter Leader Motor Value", getLeaderMotorEncoder());
+        SmartDashboard.putNumber("Shooter Slave  Motor Value", getSlaveMotorEncoder());
+        SmartDashboard.putNumber("ShooterSpeed", leaderMotor.get());
     }
 }

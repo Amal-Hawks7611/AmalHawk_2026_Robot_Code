@@ -25,7 +25,6 @@ public class Feeder extends Command {
     public void execute() {
         if (EnabledParts.IS_FEEDER_ENABLED && !timer.hasElapsed(frc.robot.Constants.Shooter.SHOOTER_TIME)){
             feederSubsystem.Feed();
-            System.out.println(timer.hasElapsed(frc.robot.Constants.Shooter.SHOOTER_TIME));
         }else{ this.end(false);
             }
     }

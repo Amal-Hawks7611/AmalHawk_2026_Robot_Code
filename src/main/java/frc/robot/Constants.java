@@ -73,7 +73,7 @@ public final class Constants {
         public static int INTAKE_ARM_LEADER_PORT = 19;
         public static int INTAKE_ARM_SLAVE_PORT = 20;
         public static double INTAKE_SETPOINT = 9;
-        public static double INTAKE_ARM_MANUAL_SPEED = 0.15; 
+        public static double INTAKE_ARM_MANUAL_SPEED = 0.1; 
         public static double INTAKE_OCALPID_SPEED = 0.1; 
         public static double PERIODIC_SPEED = 0.05;
         public static double OCALPID_TOLERANCE_VALUE = 0.1; 
