@@ -24,6 +24,8 @@ import frc.robot.commands.StartRecordingCommand;
 import frc.robot.commands.StopPlayingCommand;
 import frc.robot.commands.StopRecordingCommand;
 import frc.robot.commands.Feeder.Feeder;
+import frc.robot.commands.Feeder.FeederBack;
+import frc.robot.commands.Feeder.FeederManual;
 import frc.robot.commands.Intake.ArmDOWN;
 import frc.robot.commands.Intake.ArmUP;
 import frc.robot.commands.Intake.ArmPID;
@@ -32,6 +34,7 @@ import frc.robot.commands.Intake.ArmInitializeDown;
 import frc.robot.commands.Intake.Intake;
 import frc.robot.commands.Led.LEDMorseScroller;
 import frc.robot.commands.Led.LEDStateCycler;
+import frc.robot.commands.Shooter.shootBack;
 import frc.robot.commands.Shooter.stage3;
 import frc.robot.commands.Trajectory.AutonPath;
 
@@ -75,11 +78,11 @@ public class RobotContainer {
         public final ArmInitializeDown arm_initialize_down;
 
         public final Feeder feed;
+        public final ParallelCommandGroup intakeandfeed;
         public final stage3 shooterStage3;
-        public final InstantCommand clearevryshit;
         public final ParallelCommandGroup intakeliindirkaldir;
         public final SequentialCommandGroup indirkaldir;
-        public final ParallelCommandGroup feedandshoots3;
+        public final SequentialCommandGroup feedandshoots3;
 
         public final LEDStateCycler led_cycle;
         public final LEDMorseScroller led_morse;
@@ -107,22 +110,43 @@ public class RobotContainer {
                 arm_pid = new ArmPID(intakeArm);
                 arm_pid_up = new ArmPIDUP(intakeArm);
                 arm_initialize_down = new ArmInitializeDown(intakeArm);
-                clearevryshit = new InstantCommand(() -> CommandScheduler.getInstance().cancelAll());
 
-                feed = new Feeder(feederSubsystem);
+                feed = new Feeder(feederSubsystem, this);
+                intakeandfeed = new ParallelCommandGroup(new Intake(intakeSubsystem),
+                                new FeederManual(feederSubsystem));
                 colorSensors = new ColorSensors();
                 shooterStage3 = new stage3(shooterSubsystem, colorSensors);
-                feedandshoots3 = new ParallelCommandGroup(
-                               feed, 
-                               shooterStage3);
+                ParallelCommandGroup feedandshootback = new ParallelCommandGroup(
+                                new FeederBack(feederSubsystem),
+                                new shootBack(shooterSubsystem));
+                ParallelCommandGroup shootcool = new ParallelCommandGroup(
+                                feed,
+                                shooterStage3);
+                feedandshoots3 = new SequentialCommandGroup(
+                                feedandshootback, shootcool);
                 indirkaldir = new SequentialCommandGroup(
                                 new ArmPIDUP(intakeArm),
                                 new ArmPID(intakeArm));
                 intakeliindirkaldir = new ParallelCommandGroup(
                                 new Intake(intakeSubsystem),
+                                new FeederManual(feederSubsystem),
                                 new SequentialCommandGroup(
                                                 new ArmPIDUP(intakeArm),
-                                                new ArmPID(intakeArm)));
+                                                new ArmPID(intakeArm),
+                                                new InstantCommand(()-> feederSubsystem.setFeeding(false)),
+                                                new InstantCommand(()-> intakeSubsystem.setIntaking(false))));
+
+                NamedCommands.registerCommand("LimelightAlign", limelightSubsystem.autoAlignAndApproach(drivebase, 3.409440748415765));
+                NamedCommands.registerCommand("Feed", feed);
+                NamedCommands.registerCommand("Stage3", shooterStage3);
+                NamedCommands.registerCommand("FeedBack", new FeederBack(feederSubsystem));
+                NamedCommands.registerCommand("ShootBack", new shootBack(shooterSubsystem));
+                NamedCommands.registerCommand("Intake", f_intake);
+                NamedCommands.registerCommand("FeederManual", new FeederManual(feederSubsystem));
+                NamedCommands.registerCommand("ArmPIDUP", new ArmPIDUP(intakeArm));
+                NamedCommands.registerCommand("ArmPID", new ArmPID(intakeArm));
+                NamedCommands.registerCommand("CFeed", new InstantCommand(()-> feederSubsystem.setFeeding(false)));
+                NamedCommands.registerCommand("CIntake", new InstantCommand(()-> intakeSubsystem.setIntaking(false)));
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
@@ -134,16 +158,17 @@ public class RobotContainer {
         }
 
         public void configureButtonBindings() {
-                Controlls.INTAKE.whileTrue(f_intake);
+                Controlls.INTAKE.whileTrue(intakeandfeed);
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
                 Controlls.Intake_ARM_PID.onChange(arm_pid);
                 Controlls.STAGE_3.onChange(feedandshoots3);
                 Controlls.ZERO_GYRO.onChange(zerogyro);
-                Controlls.FEED.whileTrue(new Feeder(feederSubsystem));
+                Controlls.FEED.whileTrue(new Feeder(feederSubsystem, this));
                 Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
                 Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
-                Controlls.LIMELIGHT_DEHSET.onChange(limelightSubsystem.autoAlignAndApproach(drivebase, 10));
+                Controlls.LIMELIGHT_DEHSET
+                                .onChange(limelightSubsystem.autoAlignAndApproach(drivebase, 3.409440748415765));
 
                 Controlls.START_LOG.onTrue(new StartRecordingCommand(loggerSubsystem, "auto_move_1"));
                 Controlls.STOP_LOG.onTrue(new StopRecordingCommand(loggerSubsystem));

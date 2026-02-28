@@ -16,6 +16,7 @@ public class Intake extends Command {
     @Override
     public void initialize() {
         System.out.println("Fuel Intaking Ininialized");
+        intakeSubsystem.setIntaking(true);
         OI.IS_INTAKING = true;
 
     }
@@ -30,11 +31,12 @@ public class Intake extends Command {
     @Override
     public void end(boolean interrupted) {
         intakeSubsystem.leaderMotor.stopMotor();
+        intakeSubsystem.setIntaking(false);
         OI.IS_INTAKING = false;
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !intakeSubsystem.getIntaking();
     }
 }

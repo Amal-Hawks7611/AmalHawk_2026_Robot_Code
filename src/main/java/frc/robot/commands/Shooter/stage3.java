@@ -11,6 +11,7 @@ public class stage3 extends Command {
     public final ShooterSubsystem shooterSubsystem;
     public final ColorSensors colorSensors;
     public static Timer timer2;
+    public static Boolean isShot;
     public stage3(ShooterSubsystem shooterSubsystem, ColorSensors colorSensors) {
         this.shooterSubsystem = shooterSubsystem;
         this.colorSensors = colorSensors;
@@ -22,16 +23,28 @@ public class stage3 extends Command {
     public void initialize() {
         System.out.println("Fuel STAGE3 Ininialized");
         shooterSubsystem.setShooting(true);
-        timer2.restart();
+        timer2.reset();
+        isShot = false;
     }
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_SHOOTER_ENABLED && colorSensors.isBallDetected()){
+        if (EnabledParts.IS_SHOOTER_ENABLED){
             shooterSubsystem.Shoot(Shooter.STAGE3_SPEED);
-        } else if ( !colorSensors.isBallDetected()){
-           this.end(true);
+            if (colorSensors.isBallDetected())
+            {
+                timer2.start();
+            }
+            else if ( !colorSensors.isBallDetected()){
+            if (timer2.hasElapsed(2)){
+                this.end(false);
+            }else{
+                shooterSubsystem.Shoot(Shooter.STAGE3_SPEED);}
+           if(colorSensors.isBallDetected() && timer2.get() > 0){
+            timer2.restart();
+           }
         }
+        } 
     }
 
     @Override
@@ -45,6 +58,6 @@ public class stage3 extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !shooterSubsystem.isShooting();
     }
 }

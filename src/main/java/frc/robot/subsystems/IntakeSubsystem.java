@@ -16,6 +16,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public TalonFX leaderMotor;
     private StatusSignal<Angle> leaderMotorPosition;
     public RobotContainer container;
+    public static boolean isIntaking = false;
 
     public Timer timer = new Timer();
 
@@ -37,7 +38,12 @@ public class IntakeSubsystem extends SubsystemBase {
     public void Intake() {
                 leaderMotor.set(Intake.INTAKE_SPEED);
             }
-
+    public void setIntaking(boolean active){
+        isIntaking = active;
+    }
+    public boolean getIntaking(){
+        return isIntaking;
+    }
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("IsIntaking", OI.IS_INTAKING);

@@ -77,12 +77,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    // CommandScheduler.getInstance().schedule(m_robotContainer.arm_initialize_down);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.setMotorBrake(true);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
-      CommandScheduler.getInstance().schedule(m_robotContainer.led_morse);
     }
   }
 

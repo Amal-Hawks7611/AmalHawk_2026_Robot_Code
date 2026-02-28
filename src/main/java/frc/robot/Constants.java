@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import swervelib.math.Matter;
 
 public final class Constants {
-    public static final double ROBOT_MASS = 104.72 * 0.453592;  //TODO GİR
+    public static final double ROBOT_MASS = 104.72 * 0.453592;
     public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME = 0.13; 
     public static final double MAX_SPEED = 3;
@@ -25,8 +25,8 @@ public final class Constants {
 
     public static final class DrivebaseConstants {
         public static final double WHEEL_LOCK_TIME = 10;
-        public static final PIDConstants transation = new PIDConstants(12, 0.0, 0.05);
-        public static final PIDConstants angle = new PIDConstants(3, 0.0, 0.05);
+        public static final PIDConstants transation = new PIDConstants(10, 0.0, 0.05);
+        public static final PIDConstants angle = new PIDConstants(1, 0.0, 0.05);
     }
 
     public static class OperatorConstants {
@@ -57,7 +57,7 @@ public final class Constants {
     }
     public static class Feeder {
         public static int FEEDER_LEADER_MOTOR_PORT = 21;
-        public static double FEEDER_SPEED = 0.5;
+        public static double FEEDER_SPEED = 1;
         public static double FEEDER_PERIODIC_SPEED = 0.1;
         public static double FEEDER_TIME = 9.6;
     }
@@ -66,7 +66,7 @@ public final class Constants {
         public static int SHOOTER_SLAVE_PORT = 23;
         public static double STAGE1_SPEED = 0.5;
         public static double STAGE2_SPEED = 0.7;
-        public static double STAGE3_SPEED = 0.5;
+        public static double STAGE3_SPEED = 0.95;
         public static double SHOOTER_TIME = 10;
     }
     public static class IntakeArm {
@@ -124,7 +124,7 @@ public final class Constants {
         public static int OPERATOR_CONTROLLER_PORT = 1;
         public static String SWERVE_CANBUS_STRING = "rio";
         public static String RIO_CANBUS_STRING = "rio";
-        public static String LL_NAME = "limelightplus";
+        public static String LL_NAME = "limelight";
         public static boolean IS_TEST = false;
         public static boolean IS_PROCESSING = false;
         public static boolean IS_SWERVE_FOCUSED = false;

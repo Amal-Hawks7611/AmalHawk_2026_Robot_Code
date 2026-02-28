@@ -45,15 +45,17 @@ public class FeederSubsystem extends SubsystemBase {
     public void Feed() {
                 leaderMotor.set(Feeder.FEEDER_SPEED);
     }
-
+    public void FeedPerio(){
+        leaderMotor.set(Feeder.FEEDER_PERIODIC_SPEED);
+    }
+    public void FeedBack(){
+        leaderMotor.set(-Feeder.FEEDER_PERIODIC_SPEED);
+    }
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("ısFeeding", isFeeding);
         SmartDashboard.putNumber("Feeder Leader Motor Value", getLeaderMotorEncoder());
         SmartDashboard.putNumber("FeederSpeed", leaderMotor.get());
-        if(!isFeeding() && container.intakeArm.getCanMoveUp()){
-           leaderMotor.set(Feeder.FEEDER_PERIODIC_SPEED);
-        }
         if(!container.intakeArm.getCanMoveUp()){
             leaderMotor.set(0);
         }

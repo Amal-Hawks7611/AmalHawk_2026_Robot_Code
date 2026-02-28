@@ -45,11 +45,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void Shoot(double speed) {
-        if(container.colorSensors.isBallDetected()){
         leaderMotor.set(speed);
-        slaveMotor.set(speed);}else{
-            stopMotors();
-        }
+        slaveMotor.set(speed);
+    }
+    public void ShootBack(){
+        leaderMotor.set(-Shooter.STAGE3_SPEED);
+        slaveMotor.set(-Shooter.STAGE3_SPEED);
     }
     public boolean isShooting(){
         return isShooting;
