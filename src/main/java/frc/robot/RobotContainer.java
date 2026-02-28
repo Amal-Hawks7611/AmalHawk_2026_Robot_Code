@@ -136,7 +136,7 @@ public class RobotContainer {
                                                 new InstantCommand(()-> feederSubsystem.setFeeding(false)),
                                                 new InstantCommand(()-> intakeSubsystem.setIntaking(false))));
 
-                NamedCommands.registerCommand("LimelightAlign", limelightSubsystem.autoAlignAndApproach(drivebase, 3.409440748415765));
+                NamedCommands.registerCommand("LimelightAlign", limelightSubsystem.alignToPose(drivebase, 0.0,3.409440748415765, 0.0));
                 NamedCommands.registerCommand("Feed", feed);
                 NamedCommands.registerCommand("Stage3", shooterStage3);
                 NamedCommands.registerCommand("FeedBack", new FeederBack(feederSubsystem));
@@ -168,7 +168,7 @@ public class RobotContainer {
                 Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
                 Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
                 Controlls.LIMELIGHT_DEHSET
-                                .onChange(limelightSubsystem.autoAlignAndApproach(drivebase, 3.409440748415765));
+                                .onChange(limelightSubsystem.alignToPose(drivebase, 0.0,3.409440748415765, 0.0));
 
                 Controlls.START_LOG.onTrue(new StartRecordingCommand(loggerSubsystem, "auto_move_1"));
                 Controlls.STOP_LOG.onTrue(new StopRecordingCommand(loggerSubsystem));
