@@ -131,8 +131,6 @@ public class IntakeArm extends SubsystemBase {
         SmartDashboard.putNumber("SlaveEncoder", getSlaveEncoder());
         SmartDashboard.putBoolean("CanMoveUp", canMoveUp);
         SmartDashboard.putBoolean("CanMoveDown", canMoveDown);
-        SmartDashboard.putBoolean("PID", isPidActive);
-        SmartDashboard.putBoolean("PIDUp", isPidUpActive);
         double pos = getLeaderEncoder();
         double s_pos = getSlaveEncoder();
         if(pos < Leader.TOP_LIMIT + 1.5 || s_pos < Slave.TOP_LIMIT + 1.5){

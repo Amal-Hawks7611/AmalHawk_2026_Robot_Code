@@ -52,15 +52,8 @@ public class ColorSensors extends SubsystemBase {
         } else {
             ballDetected2 = false;
         }
-        SmartDashboard.putNumber("Red 1", detectedColor.red);
-        SmartDashboard.putNumber("Green 1", detectedColor.green);
-        SmartDashboard.putNumber("Blue 1", detectedColor.blue);
         SmartDashboard.putNumber("Confidence 1", match != null ? match.confidence : 0.0);
         SmartDashboard.putBoolean("Ball Detected 1", ballDetected1);
-
-        SmartDashboard.putNumber("Red 2", detectedColor2.red);
-        SmartDashboard.putNumber("Green 2", detectedColor2.green);
-        SmartDashboard.putNumber("Blue 2", detectedColor2.blue);
         SmartDashboard.putNumber("Confidence 2", match2 != null ? match2.confidence : 0.0);
         SmartDashboard.putBoolean("Ball Detected 2", ballDetected2);
 

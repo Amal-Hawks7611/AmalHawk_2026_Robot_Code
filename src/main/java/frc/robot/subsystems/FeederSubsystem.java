@@ -5,7 +5,6 @@ import frc.robot.Constants.Feeder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
@@ -53,9 +52,6 @@ public class FeederSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("ısFeeding", isFeeding);
-        SmartDashboard.putNumber("Feeder Leader Motor Value", getLeaderMotorEncoder());
-        SmartDashboard.putNumber("FeederSpeed", leaderMotor.get());
         if(!container.intakeArm.getCanMoveUp()){
             leaderMotor.set(0);
         }

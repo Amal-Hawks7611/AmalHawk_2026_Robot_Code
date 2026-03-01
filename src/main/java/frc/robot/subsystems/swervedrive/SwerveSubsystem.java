@@ -133,11 +133,6 @@ public class SwerveSubsystem extends SubsystemBase {
       double dist = megaTagEst.avgTagDist;
       double transStdDev = 0.05 + (dist * 0.1);
       double rotStdDev = 999.0;
-
-      if (megaTagEst.tagCount >= 2) {
-        rotStdDev = 0.3 + (dist * 0.2);
-      }
-
       swerveDrive.addVisionMeasurement(
           visionPose,
           megaTagEst.timestampSeconds,

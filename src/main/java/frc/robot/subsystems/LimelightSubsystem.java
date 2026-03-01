@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -68,21 +67,23 @@ public class LimelightSubsystem extends SubsystemBase {
                             rot,
                             false);
 
-                    isAligned =
-                            Math.abs(yawError) <= YAW_TOLERANCE &&
+                    isAligned = Math.abs(yawError) <= YAW_TOLERANCE &&
                             Math.abs(xError) <= X_TOLERANCE &&
                             Math.abs(zError) <= Z_TOLERANCE;
-
-                    SmartDashboard.putNumber("LL/X", currentX);
-                    SmartDashboard.putNumber("LL/Z", currentZ);
-                    SmartDashboard.putNumber("LL/Yaw", currentYaw);
                 },
 
-                interrupted -> swerve.drive(new Translation2d(0, 0), 0, false),
+                interrupted -> isAligned = true,
 
                 () -> isAligned,
 
                 swerve);
+    }
+
+    public double getZ() {
+        double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
+        if (pose.length < 6)
+            return 0;
+        return pose[2];
     }
 
     @Override
@@ -90,9 +91,5 @@ public class LimelightSubsystem extends SubsystemBase {
         double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
         if (pose.length < 6)
             return;
-
-        SmartDashboard.putNumber("LL/X", pose[0]);
-        SmartDashboard.putNumber("LL/Z", pose[2]);
-        SmartDashboard.putNumber("LL/Yaw", pose[5]);
     }
 }

@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
     if (Controlls.DRIVER_CONTROLLER.getLeftY() <= -0.3 && Controlls.DRIVER_CONTROLLER.getLeftY() >= -0.6)
       LedSubsystem.BREATHE_MAGNITUDE = 3;
     if (Controlls.DRIVER_CONTROLLER.getLeftY() <= -0.6 && Controlls.DRIVER_CONTROLLER.getLeftY() >= -0.9) {
@@ -90,7 +89,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // CommandScheduler.getInstance().schedule(m_robotContainer.arm_initialize_down);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
