@@ -5,7 +5,6 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,6 +13,7 @@ public class ColorSensors extends SubsystemBase {
     private final ColorSensorV3 colorSensor1;
     private final ColorSensorV3 colorSensor2;
     private final ColorMatch colorMatcher;
+    public int loopCounter;
 
     private final Color kYellowTarget = new Color(0.330078125, 0.545166015625, 0.125);
 
@@ -28,39 +28,19 @@ public class ColorSensors extends SubsystemBase {
         colorMatcher.setConfidenceThreshold(0.92);
     }
 
-    @Override
-    public void periodic() {
+    public boolean isBallDetected() {
         Color detectedColor = colorSensor1.getColor();
         Color detectedColor2 = colorSensor2.getColor();
         ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
         ColorMatchResult match2 = colorMatcher.matchClosestColor(detectedColor2);
-        if (match != null 
+
+        ballDetected1 = match != null
                 && match.confidence >= 0.92
-                && match.color.equals(kYellowTarget)) {
+                && match.color.equals(kYellowTarget);
 
-            ballDetected1 = true;
-
-        } else {
-            ballDetected1 = false;
-        }
-        if (match2 != null 
+        ballDetected2 = match2 != null
                 && match2.confidence >= 0.92
-                && match2.color.equals(kYellowTarget)) {
-
-            ballDetected2 = true;
-
-        } else {
-            ballDetected2 = false;
-        }
-        SmartDashboard.putNumber("Confidence 1", match != null ? match.confidence : 0.0);
-        SmartDashboard.putBoolean("Ball Detected 1", ballDetected1);
-        SmartDashboard.putNumber("Confidence 2", match2 != null ? match2.confidence : 0.0);
-        SmartDashboard.putBoolean("Ball Detected 2", ballDetected2);
-
-        SmartDashboard.putBoolean("Ball Detected", ballDetected1 || ballDetected2);
-    }
-
-    public boolean isBallDetected() {
+                && match2.color.equals(kYellowTarget);
         return ballDetected1 || ballDetected2;
     }
 }

@@ -30,7 +30,7 @@ public class stage3 extends Command {
     @Override
     public void execute() {
         if (EnabledParts.IS_SHOOTER_ENABLED){
-            shooterSubsystem.Shoot(Shooter.STAGE3_SPEED);
+            shooterSubsystem.Shoot(45);
             if (colorSensors.isBallDetected())
             {
                 timer2.start();
@@ -39,7 +39,7 @@ public class stage3 extends Command {
             if (timer2.hasElapsed(2)){
                 this.end(false);
             }else{
-                shooterSubsystem.Shoot(Shooter.STAGE3_SPEED);}
+                shooterSubsystem.Shoot(45);}
            if(colorSensors.isBallDetected() && timer2.get() > 0){
             timer2.restart();
            }

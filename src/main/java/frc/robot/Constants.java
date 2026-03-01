@@ -58,7 +58,7 @@ public final class Constants {
     public static class Feeder {
         public static int FEEDER_LEADER_MOTOR_PORT = 21;
         public static double FEEDER_SPEED = 1;
-        public static double FEEDER_PERIODIC_SPEED = 0.1;
+        public static double FEEDER_PERIODIC_SPEED = 0.5;
         public static double FEEDER_TIME = 9.6;
     }
     public static class Shooter {
@@ -66,7 +66,7 @@ public final class Constants {
         public static int SHOOTER_SLAVE_PORT = 23;
         public static double STAGE1_SPEED = 0.5;
         public static double STAGE2_SPEED = 0.7;
-        public static double STAGE3_SPEED = 0.95;
+        public static double STAGE3_SPEED = 11;
         public static double SHOOTER_TIME = 10;
     }
     public static class IntakeArm {

@@ -17,8 +17,16 @@ public class LimelightSubsystem extends SubsystemBase {
     private static final double ROT_SPEED = 0.4;
     private static final double STRAFE_SPEED = 0.6;
     private static final double FORWARD_SPEED = 0.75;
+    private static final double GRAVITY = 9.81;
+    private static final double SHOOTER_ANGLE_DEG = 69.0;
+    private static final double TARGET_HEIGHT = 1.42;
 
     private boolean isAligned = false;
+    
+    private static double x = LimelightSubsystem.getZ();
+
+    double velocity_required = Math.sqrt((GRAVITY*x*x)/(2*Math.cos(SHOOTER_ANGLE_DEG)*(x*Math.tan(SHOOTER_ANGLE_DEG) - TARGET_HEIGHT)));
+    
 
     public Command alignToPose(
             SwerveSubsystem swerve,
@@ -79,7 +87,7 @@ public class LimelightSubsystem extends SubsystemBase {
                 swerve);
     }
 
-    public double getZ() {
+    public static double getZ() {
         double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
         if (pose.length < 6)
             return 0;
@@ -91,5 +99,6 @@ public class LimelightSubsystem extends SubsystemBase {
         double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
         if (pose.length < 6)
             return;
+        System.out.println(velocity_required);
     }
 }

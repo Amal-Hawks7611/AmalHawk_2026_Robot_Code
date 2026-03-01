@@ -6,28 +6,41 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ShooterSubsystem extends SubsystemBase {
     public TalonFX leaderMotor;
     public TalonFX slaveMotor;
     public StatusSignal<Angle> slaveMotorPosition;
     private StatusSignal<Angle> leaderMotorPosition;
-    public RobotContainer container;
     public boolean isShooting = false;
-
     public Timer timer = new Timer();
-
-    public ShooterSubsystem(RobotContainer container) {
+    public final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
+    public ShooterSubsystem() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.Slot0.kP = 0.45;
+        config.Slot0.kI = 0.0;
+        config.Slot0.kD = 0.0;
+        config.Slot0.kV = 0.12;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         leaderMotor = new TalonFX(Shooter.SHOOTER_LEADER_PORT, new CANBus("arch"));
         slaveMotor = new TalonFX(Shooter.SHOOTER_SLAVE_PORT, new CANBus("arch"));
+        leaderMotor.getDutyCycle().setUpdateFrequency(50);
+        slaveMotor.getDutyCycle().setUpdateFrequency(50);
+        leaderMotor.getConfigurator().apply(config);
         leaderMotorPosition = leaderMotor.getPosition();
         slaveMotorPosition = slaveMotor.getPosition();
-
-        this.container = container;
+        slaveMotor.setControl(new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+      
         resetEncoders();
     }
 
@@ -45,12 +58,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void Shoot(double speed) {
-        leaderMotor.set(speed);
-        slaveMotor.set(speed);
+        leaderMotor.setControl(velocityVoltage.withVelocity(speed));
     }
     public void ShootBack(){
-        leaderMotor.set(-Shooter.STAGE3_SPEED);
-        slaveMotor.set(-Shooter.STAGE3_SPEED);
+        leaderMotor.setVoltage(-Shooter.STAGE3_SPEED);
     }
     public boolean isShooting(){
         return isShooting;
@@ -59,12 +70,12 @@ public class ShooterSubsystem extends SubsystemBase {
         isShooting = status;
     }
     public void stopMotors(){
-        leaderMotor.set(0);
-        slaveMotor.set(0);
+       leaderMotor.set(0);
     }
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("isShooting", isShooting);
         SmartDashboard.putNumber("ShooterSpeed", leaderMotor.get());
+        SmartDashboard.putNumber("GetZ", LimelightSubsystem.getZ());
     }
 }

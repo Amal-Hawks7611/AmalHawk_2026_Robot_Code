@@ -51,7 +51,7 @@ public class RobotContainer {
         public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(this);
         public final StatusLED ledSubsystem = new StatusLED();
         public final IntakeArm intakeArm = new IntakeArm();
-        public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(this);
+        public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
         public final FeederSubsystem feederSubsystem = new FeederSubsystem(this);
         public final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
         public final AutonPath otonom_path = new AutonPath();
@@ -112,9 +112,12 @@ public class RobotContainer {
                                 new shootBack(shooterSubsystem));
                 ParallelCommandGroup shootcool = new ParallelCommandGroup(
                                 feed,
-                                shooterStage3);
+                                new InstantCommand(()->shooterSubsystem.Shoot(500))
+                                );
                 feedandshoots3 = new SequentialCommandGroup(
-                                feedandshootback, shootcool);
+                                //feedandshootback,
+                                shootcool
+                                );
                 indirkaldir = new SequentialCommandGroup(
                                 new ArmPIDUP(intakeArm),
                                 new ArmPID(intakeArm));
@@ -155,11 +158,13 @@ public class RobotContainer {
                 Controlls.Intake_ARM_PID.onChange(arm_pid);
                 Controlls.STAGE_3.onChange(feedandshoots3);
                 Controlls.ZERO_GYRO.onChange(zerogyro);
-                Controlls.FEED.whileTrue(new Feeder(feederSubsystem, this));
+                Controlls.FEED.whileTrue(new FeederManual(feederSubsystem));
                 Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
-                Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
+                // Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
                 Controlls.LIMELIGHT_DEHSET
                                 .onChange(limelightSubsystem.alignToPose(drivebase, 0.0,3.409440748415765, 0.0));
+                Controlls.DRIVER_CONTROLLER.povLeft().onTrue(new InstantCommand(()->shooterSubsystem.stopMotors()));
+                Controlls.DRIVER_CONTROLLER.povRight().onTrue(new InstantCommand(()->shooterSubsystem.Shoot(1000)));
         }
 
         public Command getAutonomousCommand() {
