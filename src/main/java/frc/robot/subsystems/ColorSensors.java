@@ -5,6 +5,7 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -41,6 +42,7 @@ public class ColorSensors extends SubsystemBase {
         ballDetected2 = match2 != null
                 && match2.confidence >= 0.92
                 && match2.color.equals(kYellowTarget);
+                SmartDashboard.putBoolean("Ball", ballDetected1 || ballDetected2);
         return ballDetected1 || ballDetected2;
     }
 }

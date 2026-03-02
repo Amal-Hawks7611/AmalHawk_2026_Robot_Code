@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.RobotContainer;
 import frc.robot.Constants.Shooter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.units.measure.Angle;
@@ -9,8 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -61,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
         leaderMotor.setControl(velocityVoltage.withVelocity(speed));
     }
     public void ShootBack(){
-        leaderMotor.setVoltage(-Shooter.STAGE3_SPEED);
+        leaderMotor.setControl(velocityVoltage.withVelocity(-Shooter.STAGE2_SPEED));
     }
     public boolean isShooting(){
         return isShooting;

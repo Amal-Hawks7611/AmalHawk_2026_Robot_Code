@@ -5,7 +5,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -37,16 +36,15 @@ public final class Constants {
     }
 
     public static final class LedSubsystem {
-        public static int LED_PWM_PORT = 0;
-        public static int LED_LENGTH = 180;
+        public static int LED_PWM_PORT = 9;
+        public static int LED_LENGTH = 48;
         public static int BREATHE_MAGNITUDE = 5;
         public static LEDPattern ELEVATOR_PROCESS_COLOR = LEDPattern.solid(setBrightness(Color.kPurple, 0.69 * 0.8));
-        public static LEDPattern TARGET_FOCUS_COLOR = LEDPattern.solid(setBrightness(Color.kGreen, 0.69 * 0.8));
-        public static LEDPattern INTAKE_COLOR = LEDPattern.solid(setBrightness(Color.kWhite, 0.69 * 0.8));
-        public static LEDPattern ALGEA_INTAKE_COLOR = LEDPattern.solid(setBrightness(Color.kAqua, 0.69 * 0.8));
-        public static LEDPattern BREATHE_COLOR = LEDPattern.gradient(GradientType.kDiscontinuous,
-                setBrightness(Color.kOrangeRed, 0.69 * 0.8), setBrightness(Color.kRed, 0.69 * 0.8),
-                setBrightness(Color.kDarkRed, 0.69 * 0.8));
+        public static LEDPattern FOCUS_COLOR = LEDPattern.solid(setBrightness(Color.kGreen, 0.69 * 0.8));
+        public static LEDPattern SHOOT_COLOR = LEDPattern.solid(setBrightness(Color.kYellowGreen, 0.69 * 0.8));
+        public static LEDPattern FOCUS_COLOR_LEFT = LEDPattern.solid(setBrightness(Color.kDarkRed, 0.69 * 0.8));
+        public static LEDPattern FOCUS_COLOR_RIGHT = LEDPattern.solid(setBrightness(Color.kBlue, 0.69 * 0.8));
+        public static LEDPattern FOCUS_COLOR_CENTER = LEDPattern.solid(setBrightness(Color.kWhite, 0.69 * 0.8));
     }
 
 
@@ -57,16 +55,16 @@ public final class Constants {
     }
     public static class Feeder {
         public static int FEEDER_LEADER_MOTOR_PORT = 21;
-        public static double FEEDER_SPEED = 1;
-        public static double FEEDER_PERIODIC_SPEED = 0.5;
+        public static double FEEDER_SPEED = 53;
+        public static double FEEDER_PERIODIC_SPEED = 8;
         public static double FEEDER_TIME = 9.6;
     }
     public static class Shooter {
         public static int SHOOTER_LEADER_PORT = 22;
         public static int SHOOTER_SLAVE_PORT = 23;
         public static double STAGE1_SPEED = 0.5;
-        public static double STAGE2_SPEED = 0.7;
-        public static double STAGE3_SPEED = 11;
+        public static double STAGE2_SPEED = 60;
+        public static double STAGE3_SPEED = 66;
         public static double SHOOTER_TIME = 10;
     }
     public static class IntakeArm {
@@ -99,7 +97,7 @@ public final class Constants {
         public static Trigger Intake_ARM_PID = Controlls.DRIVER_CONTROLLER.povDown();
         public static Trigger FEED = Controlls.DRIVER_CONTROLLER.cross();
         public static Trigger STAGE_3 = Controlls.DRIVER_CONTROLLER.triangle();
-        public static Trigger ZERO_GYRO = Controlls.DRIVER_CONTROLLER.PS();
+        public static Trigger ZERO_GYRO = Controlls.DRIVER_CONTROLLER.options();
         public static Trigger INTAKE_UP_PID = Controlls.DRIVER_CONTROLLER.povUp();
         public static Trigger INDIR_KALDIR = Controlls.DRIVER_CONTROLLER.povRight();
         public static Trigger LIMELIGHT_DEHSET = Controlls.DRIVER_CONTROLLER.square();
@@ -111,7 +109,7 @@ public final class Constants {
     }
 
     public static class EnabledParts {
-        public static boolean IS_LED_ENABLED = false;
+        public static boolean IS_LED_ENABLED = true;
         public static boolean IS_SWERVE_ENABLED = true;
         public static boolean IS_INTAKE_ENABLED = true;
         public static boolean IS_INTAKE_ARM_ENABLED = true;
@@ -129,7 +127,6 @@ public final class Constants {
         public static boolean IS_PROCESSING = false;
         public static boolean IS_SWERVE_FOCUSED = false;
         public static boolean IS_INTAKING = false;
-        public static boolean IS_LED_CYCLING = false;
         public static boolean IS_LED_MORSE_SHOWING = false;
         public static boolean IS_FOCUSED = false;
         public static boolean IS_GONE = false;

@@ -40,6 +40,11 @@ public class IntakeArm extends SubsystemBase {
         return -slave_motor.getPosition().getValueAsDouble();
     }
 
+    public void resetEncoders(){
+        leader_motor.setPosition(0);
+        slave_motor.setPosition(0);
+    }
+
     public void ArmUP() {
         leader_motor.set(Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED);
         slave_motor.set(Constants.IntakeArm.INTAKE_ARM_MANUAL_SPEED);
@@ -82,8 +87,8 @@ public class IntakeArm extends SubsystemBase {
         double s_pos = getSlaveEncoder();
         boolean leaderStopped = false;
         boolean slaveStopped = false;
-        Leader.TOP_LIMIT = 3;
-        Slave.TOP_LIMIT = 3;
+        Leader.TOP_LIMIT = 2.6;
+        Slave.TOP_LIMIT = 2.6;
      System.out.println(Math.abs(pos - frc.robot.Constants.IntakeArm.INTAKE_TOP_SETPOINT));
         if(Math.abs(pos - frc.robot.Constants.IntakeArm.INTAKE_TOP_SETPOINT) < frc.robot.Constants.IntakeArm.OCALPID_TOLERANCE_VALUE){
             leader_motor.set(0);

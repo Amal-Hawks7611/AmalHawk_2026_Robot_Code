@@ -35,78 +35,9 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "FeederManual"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmPIDUP"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmPID"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "CFeed"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "CIntake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "FeedBack"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShootBack"
-                      }
-                    }
-                  ]
-                }
-              },
               {
                 "type": "parallel",
                 "data": {
@@ -180,28 +111,59 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FeederManual"
+                }
+              },
+              {
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
                       "type": "named",
                       "data": {
-                        "name": "FeedBack"
+                        "name": "ArmPIDUP"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "ShootBack"
+                        "name": "ArmPID"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CFeed"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CIntake"
                       }
                     }
                   ]
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
               {
                 "type": "parallel",
                 "data": {

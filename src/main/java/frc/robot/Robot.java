@@ -3,16 +3,10 @@ package frc.robot;
 
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.LEDPattern.GradientType;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.Controlls;
-import frc.robot.Constants.LedSubsystem;
 import frc.robot.Constants.OI;
 
 public class Robot extends TimedRobot {
@@ -31,27 +25,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    if (Controlls.DRIVER_CONTROLLER.getLeftY() <= -0.3 && Controlls.DRIVER_CONTROLLER.getLeftY() >= -0.6)
-      LedSubsystem.BREATHE_MAGNITUDE = 3;
-    if (Controlls.DRIVER_CONTROLLER.getLeftY() <= -0.6 && Controlls.DRIVER_CONTROLLER.getLeftY() >= -0.9) {
-      LedSubsystem.BREATHE_MAGNITUDE = 2;
-    }
-    if (Controlls.DRIVER_CONTROLLER.getLeftY() <= -0.9) {
-      LedSubsystem.BREATHE_MAGNITUDE = 1;
-    }
   }
 
   @Override
   public void robotInit() {
     m_robotContainer.drivebase.zeroGyro();
-    if (!RobotBase.isSimulation()) {
-      if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        LedSubsystem.BREATHE_COLOR = LEDPattern.gradient(GradientType.kDiscontinuous,
-            m_robotContainer.ledSubsystem.setBrightness(Color.kBlue, 0.69 * 0.8),
-            m_robotContainer.ledSubsystem.setBrightness(Color.kDarkBlue, 0.69 * 0.8),
-            m_robotContainer.ledSubsystem.setBrightness(Color.kPurple, 0.69 * 0.8));
-      }
-    }
     for (int port = 5800; port <= 5809; port++) {
       PortForwarder.add(port, "limelight.local", port);
     }
@@ -78,6 +56,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.setMotorBrake(true);
+    CommandScheduler.getInstance().schedule(m_robotContainer.led_morse);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
@@ -91,6 +70,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+      m_robotContainer.led_morse.cancel();
     }
     OI.IS_TEST = false;
     m_robotContainer.configureButtonBindings();
@@ -104,7 +84,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
     OI.IS_TEST = true;
-    m_robotContainer.configureButtonBindings();
+    CommandScheduler.getInstance().schedule(m_robotContainer.led_morse);
   }
 
   @Override

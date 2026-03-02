@@ -49,7 +49,7 @@ public class RobotContainer {
         public final SwerveSubsystem drivebase = new SwerveSubsystem(
                         new File(Filesystem.getDeployDirectory(), "swerve"));
         public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(this);
-        public final StatusLED ledSubsystem = new StatusLED();
+        public final StatusLED ledSubsystem = new StatusLED(this);
         public final IntakeArm intakeArm = new IntakeArm();
         public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
         public final FeederSubsystem feederSubsystem = new FeederSubsystem(this);
@@ -71,6 +71,7 @@ public class RobotContainer {
         public final Feeder feed;
         public final ParallelCommandGroup intakeandfeed;
         public final stage3 shooterStage3;
+        public final ParallelCommandGroup feedandshootback;
         public final ParallelCommandGroup intakeliindirkaldir;
         public final SequentialCommandGroup indirkaldir;
         public final SequentialCommandGroup feedandshoots3;
@@ -93,7 +94,7 @@ public class RobotContainer {
                 admin = new InstantCommand(() -> CommandScheduler.getInstance().cancelAll());
 
                 led_cycle = new LEDStateCycler(ledSubsystem);
-                led_morse = new LEDMorseScroller(ledSubsystem, 180, "AMAL IN DA HOUSE");
+                led_morse = new LEDMorseScroller(ledSubsystem, 48, "KEFAL");
 
                 f_intake = new Intake(intakeSubsystem);
                 arm_down = new ArmDOWN(intakeArm);
@@ -107,12 +108,12 @@ public class RobotContainer {
                                 new FeederManual(feederSubsystem));
                 colorSensors = new ColorSensors();
                 shooterStage3 = new stage3(shooterSubsystem, colorSensors);
-                ParallelCommandGroup feedandshootback = new ParallelCommandGroup(
+                feedandshootback = new ParallelCommandGroup(
                                 new FeederBack(feederSubsystem),
                                 new shootBack(shooterSubsystem));
                 ParallelCommandGroup shootcool = new ParallelCommandGroup(
                                 feed,
-                                new InstantCommand(()->shooterSubsystem.Shoot(500))
+                                shooterStage3
                                 );
                 feedandshoots3 = new SequentialCommandGroup(
                                 //feedandshootback,
@@ -130,7 +131,9 @@ public class RobotContainer {
                                                 new InstantCommand(()-> feederSubsystem.setFeeding(false)),
                                                 new InstantCommand(()-> intakeSubsystem.setIntaking(false))));
 
-                NamedCommands.registerCommand("LimelightAlign", limelightSubsystem.alignToPose(drivebase, 0.0,3.409440748415765, 0.0));
+                NamedCommands.registerCommand("LimelightAlign", limelightSubsystem.alignToPose(drivebase, 0.0,2.4097511452095583, 3.3102247662250264,LimelightSubsystem.AlignmentTarget.CENTER));
+                NamedCommands.registerCommand("LimelightAlignLeft", limelightSubsystem.alignToPose(drivebase, 0.048898002145792055,2.457976071221796, 11.390500524023084, LimelightSubsystem.AlignmentTarget.LEFT));
+                NamedCommands.registerCommand("LimelightAlignRight", limelightSubsystem.alignToPose(drivebase, -0.24909037162812742,2.4481251643288293, -10.356336480957193, LimelightSubsystem.AlignmentTarget.RIGHT));
                 NamedCommands.registerCommand("Feed", feed);
                 NamedCommands.registerCommand("Stage3", shooterStage3);
                 NamedCommands.registerCommand("FeedBack", new FeederBack(feederSubsystem));
@@ -156,15 +159,18 @@ public class RobotContainer {
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
                 Controlls.Intake_ARM_PID.onChange(arm_pid);
-                Controlls.STAGE_3.onChange(feedandshoots3);
+                Controlls.DRIVER_CONTROLLER.R1().onChange(feedandshoots3);
                 Controlls.ZERO_GYRO.onChange(zerogyro);
                 Controlls.FEED.whileTrue(new FeederManual(feederSubsystem));
                 Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
-                // Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
-                Controlls.LIMELIGHT_DEHSET
-                                .onChange(limelightSubsystem.alignToPose(drivebase, 0.0,3.409440748415765, 0.0));
-                Controlls.DRIVER_CONTROLLER.povLeft().onTrue(new InstantCommand(()->shooterSubsystem.stopMotors()));
-                Controlls.DRIVER_CONTROLLER.povRight().onTrue(new InstantCommand(()->shooterSubsystem.Shoot(1000)));
+                Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
+                Controlls.DRIVER_CONTROLLER.triangle()
+                                .onChange(limelightSubsystem.alignToPose(drivebase, 0.0,2.4097511452095583, 3.3102247662250264,LimelightSubsystem.AlignmentTarget.CENTER));
+                Controlls.DRIVER_CONTROLLER.square().onChange(limelightSubsystem.alignToPose(drivebase, 0.048898002145792055,2.457976071221796, 11.390500524023084, LimelightSubsystem.AlignmentTarget.LEFT));
+                Controlls.DRIVER_CONTROLLER.circle().onChange(limelightSubsystem.alignToPose(drivebase, -0.24909037162812742,2.4481251643288293, -10.356336480957193, LimelightSubsystem.AlignmentTarget.RIGHT));
+                Controlls.DRIVER_CONTROLLER.R3().onChange(new InstantCommand(()->CommandScheduler.getInstance().cancelAll()));
+                Controlls.DRIVER_CONTROLLER.cross().whileTrue(feedandshootback);
+                Controlls.DRIVER_CONTROLLER.create().onChange(new InstantCommand(()->intakeArm.resetEncoders()));
         }
 
         public Command getAutonomousCommand() {

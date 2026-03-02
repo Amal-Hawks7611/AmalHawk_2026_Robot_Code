@@ -26,9 +26,10 @@ public class Feeder extends Command {
 
     @Override
     public void execute() {
-        
+        if (EnabledParts.IS_FEEDER_ENABLED && container.shooterSubsystem.isShooting() && timer.hasElapsed(1.5)){
             feederSubsystem.Feed();
-        
+        }else if(!container.shooterSubsystem.isShooting()){ this.end(false);
+            }
     }
 
     @Override

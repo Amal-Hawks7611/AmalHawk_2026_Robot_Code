@@ -3,8 +3,8 @@ package frc.robot.commands.Led;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.Constants.OI;
 import frc.robot.subsystems.StatusLED;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,12 +18,13 @@ public class LEDMorseScroller extends Command {
   private double lastShiftTime = 0.0;
   private int scrollOffset = 0;
   private final boolean[] paddedPattern;
-  private final Color backgroundColor = Color.kDarkBlue;
-  private final Color symbolColor = Color.kDarkRed;
+  private Color backgroundColor;
+  private final Color symbolColor = Color.kDarkBlue;
 
   public LEDMorseScroller(StatusLED statusLED, int ledCount, String message) {
     this.statusLED = statusLED;
     this.ledCount = ledCount;
+    backgroundColor = statusLED.setBrightness(Color.kDarkRed, 0.69*0.2);
     boolean[] rawPattern = createPattern(message);
     paddedPattern = addPadding(rawPattern, ledCount);
     addRequirements(statusLED);
@@ -73,7 +74,7 @@ public class LEDMorseScroller extends Command {
         else if (sym == '-') { list.add(true); list.add(true); list.add(true); }
         if (j < code.length() - 1) list.add(false);
       }
-      if (i < chars.length - 1 && chars[ i + 1] != ' ') {
+      if (i < chars.length - 1 && chars[i + 1] != ' ') {
         for (int j = 0; j < 3; j++) list.add(false);
       }
     }
@@ -83,9 +84,9 @@ public class LEDMorseScroller extends Command {
   }
 
   private boolean[] addPadding(boolean[] pattern, int pad) {
-    boolean[] padded = new boolean[pattern.length + pad];
-    System.arraycopy(pattern, 0, padded, 0, pattern.length);
-    for (int i = pattern.length; i < padded.length; i++) padded[i] = false;
+    boolean[] padded = new boolean[pattern.length + pad * 2];
+    for (int i = 0; i < pad; i++) padded[i] = false;
+    System.arraycopy(pattern, 0, padded, pad, pattern.length);
     return padded;
   }
 
@@ -94,18 +95,23 @@ public class LEDMorseScroller extends Command {
     timer.reset();
     timer.start();
     lastShiftTime = timer.get();
-    scrollOffset = 0;
-    OI.IS_LED_MORSE_SHOWING = true;
+    scrollOffset = paddedPattern.length - ledCount;
+    statusLED.setMorse(true);
+    for (int i = 0; i < ledCount; i++) statusLED.buffer.setLED(i, backgroundColor);
+    statusLED.led.setData(statusLED.buffer);
   }
 
   @Override
   public void execute() {
     double now = timer.get();
-    if (now - lastShiftTime >= scrollInterval) { scrollOffset++; lastShiftTime = now; }
-    if (scrollOffset > paddedPattern.length - ledCount) scrollOffset = 0;
+    if (now - lastShiftTime >= scrollInterval) {
+      scrollOffset--;
+      lastShiftTime = now;
+    }
+    if (scrollOffset < 0) scrollOffset = paddedPattern.length - ledCount;
     for (int i = 0; i < ledCount; i++) {
       int index = scrollOffset + i;
-      if (index < paddedPattern.length && paddedPattern[index]) statusLED.buffer.setLED(i, symbolColor);
+      if (index >= 0 && index < paddedPattern.length && paddedPattern[index]) statusLED.buffer.setLED(i, symbolColor);
       else statusLED.buffer.setLED(i, backgroundColor);
     }
     statusLED.led.setData(statusLED.buffer);
@@ -116,7 +122,7 @@ public class LEDMorseScroller extends Command {
     timer.stop();
     for (int i = 0; i < ledCount; i++) statusLED.buffer.setLED(i, backgroundColor);
     statusLED.led.setData(statusLED.buffer);
-    OI.IS_LED_MORSE_SHOWING = false;
+    statusLED.setMorse(false);
   }
 
   @Override

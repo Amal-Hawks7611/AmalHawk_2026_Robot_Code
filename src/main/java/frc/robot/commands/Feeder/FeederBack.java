@@ -23,7 +23,7 @@ public class FeederBack extends Command {
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_FEEDER_ENABLED && !timer.hasElapsed(0.3)){
+        if (EnabledParts.IS_FEEDER_ENABLED){
             feederSubsystem.FeedBack();
         }else{ this.end(false);
             }

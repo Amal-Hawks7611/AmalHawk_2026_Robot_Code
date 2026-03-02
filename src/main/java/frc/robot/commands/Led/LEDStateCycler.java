@@ -6,7 +6,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OI;
 import frc.robot.subsystems.StatusLED;
 
 
@@ -26,7 +25,6 @@ public class LEDStateCycler extends Command {
 
     @Override
     public void initialize() {
-        OI.IS_LED_CYCLING = true;
     }
 
     @Override
@@ -39,7 +37,6 @@ public class LEDStateCycler extends Command {
     public void end(boolean interrupted) {
         timer.stop();
         statusLED.setDefault();
-        OI.IS_LED_CYCLING = false;
     }
 
     @Override

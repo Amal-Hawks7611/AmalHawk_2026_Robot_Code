@@ -25,7 +25,7 @@ public class shootBack extends Command {
 
     @Override
     public void execute() {
-        if (EnabledParts.IS_SHOOTER_ENABLED && !timer3.hasElapsed(0.3)){
+        if (EnabledParts.IS_SHOOTER_ENABLED){
             shooterSubsystem.ShootBack();
         }else{
             this.end(false);

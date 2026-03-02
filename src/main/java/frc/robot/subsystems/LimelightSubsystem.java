@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,30 +22,44 @@ public class LimelightSubsystem extends SubsystemBase {
     private static final double SHOOTER_ANGLE_DEG = 69.0;
     private static final double TARGET_HEIGHT = 1.42;
 
+    public enum AlignmentTarget {
+        CENTER,
+        LEFT,
+        RIGHT,
+        NONE
+    }
+
+    private AlignmentTarget currentTarget = AlignmentTarget.NONE;
+
     private boolean isAligned = false;
-    
+
     private static double x = LimelightSubsystem.getZ();
 
-    double velocity_required = Math.sqrt((GRAVITY*x*x)/(2*Math.cos(SHOOTER_ANGLE_DEG)*(x*Math.tan(SHOOTER_ANGLE_DEG) - TARGET_HEIGHT)));
-    
+    double velocity_required = Math.sqrt(
+            (GRAVITY * x * x) / (2 * Math.cos(SHOOTER_ANGLE_DEG) * (x * Math.tan(SHOOTER_ANGLE_DEG) - TARGET_HEIGHT)));
 
     public Command alignToPose(
             SwerveSubsystem swerve,
             double targetX,
             double targetZ,
-            double targetYaw) {
+            double targetYaw,
+            AlignmentTarget targetType) {
 
         return new FunctionalCommand(
 
-                () -> isAligned = false,
+                () -> {
+                    isAligned = false;
+                    currentTarget = targetType;
+                },
 
                 () -> {
 
                     if (!LimelightHelpers.getTV(OI.LL_NAME)) {
                         swerve.drive(new Translation2d(0, 0), 0, false);
+                        isAligned = false;
+                        currentTarget = AlignmentTarget.NONE;
                         return;
                     }
-
                     double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
                     if (pose.length < 6)
                         return;
@@ -94,11 +109,25 @@ public class LimelightSubsystem extends SubsystemBase {
         return pose[2];
     }
 
+    public boolean isAligned() {
+        return isAligned;
+    }
+
+    public AlignmentTarget getCurrentTarget() {
+        return currentTarget;
+    }
+
     @Override
     public void periodic() {
         double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
         if (pose.length < 6)
             return;
-        System.out.println(velocity_required);
+        double currentX = pose[0];
+        double currentZ = pose[2];
+        double currentYaw = pose[5];
+
+        SmartDashboard.putNumber("LL/TZ", currentZ);
+        SmartDashboard.putNumber("LL/TX", currentX);
+        SmartDashboard.putNumber("LL/TYAW", currentYaw);
     }
 }
