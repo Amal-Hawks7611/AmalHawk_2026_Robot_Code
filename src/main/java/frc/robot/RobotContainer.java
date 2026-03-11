@@ -8,6 +8,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StatusLED;
+import frc.robot.subsystems.LimelightSubsystem.AlignmentTarget;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -67,7 +68,7 @@ public class RobotContainer {
         public final ArmPID arm_pid;
         public final ArmPIDUP arm_pid_up;
         public final ArmInitializeDown arm_initialize_down;
-
+        public Intake intakeasd;
         public final Feeder feed;
         public final ParallelCommandGroup intakeandfeed;
         public final stage3 shooterStage3;
@@ -92,7 +93,7 @@ public class RobotContainer {
                 NamedCommands.registerCommand("fIntake", new Intake(intakeSubsystem));
                 zerogyro = new InstantCommand(() -> drivebase.zeroGyro());
                 admin = new InstantCommand(() -> CommandScheduler.getInstance().cancelAll());
-
+                intakeasd = new Intake(intakeSubsystem);
                 led_cycle = new LEDStateCycler(ledSubsystem);
                 led_morse = new LEDMorseScroller(ledSubsystem, 48, "KEFAL");
 
@@ -147,6 +148,7 @@ public class RobotContainer {
                 autoChooser = AutoBuilder.buildAutoChooser();
                 SmartDashboard.putData("Auto Chooser", autoChooser);
                 configureBindings();
+                configureButtonBindings();
         }
 
         private void configureBindings() {
@@ -155,22 +157,23 @@ public class RobotContainer {
         }
 
         public void configureButtonBindings() {
-                Controlls.INTAKE.whileTrue(intakeandfeed);
+                Controlls.INTAKE.toggleOnTrue(new SequentialCommandGroup(new InstantCommand(()->IntakeSubsystem.setIntakingStatic(true)),intakeasd));
                 Controlls.INTAKE_ARM_UP.whileTrue(arm_up);
                 Controlls.INTAKE_ARM_DOWN.whileTrue(arm_down);
                 Controlls.Intake_ARM_PID.onChange(arm_pid);
-                Controlls.DRIVER_CONTROLLER.R1().onChange(feedandshoots3);
+                Controlls.DRIVER_CONTROLLER.triangle().onChange(feedandshoots3);
                 Controlls.ZERO_GYRO.onChange(zerogyro);
                 Controlls.FEED.whileTrue(new FeederManual(feederSubsystem));
                 Controlls.INTAKE_UP_PID.onChange(arm_pid_up);
                 Controlls.INDIR_KALDIR.onChange(intakeliindirkaldir);
-                Controlls.DRIVER_CONTROLLER.triangle()
-                                .onChange(limelightSubsystem.alignToPose(drivebase, 0.0,2.4097511452095583, 3.3102247662250264,LimelightSubsystem.AlignmentTarget.CENTER));
+               // Controlls.DRIVER_CONTROLLER.triangle()
+                               // .onChange(limelightSubsystem.alignToPose(drivebase, 0.0,2.4097511452095583, 3.3102247662250264,LimelightSubsystem.AlignmentTarget.CENTER));
                 Controlls.DRIVER_CONTROLLER.square().onChange(limelightSubsystem.alignToPose(drivebase, 0.048898002145792055,2.457976071221796, 11.390500524023084, LimelightSubsystem.AlignmentTarget.LEFT));
                 Controlls.DRIVER_CONTROLLER.circle().onChange(limelightSubsystem.alignToPose(drivebase, -0.24909037162812742,2.4481251643288293, -10.356336480957193, LimelightSubsystem.AlignmentTarget.RIGHT));
                 Controlls.DRIVER_CONTROLLER.R3().onChange(new InstantCommand(()->CommandScheduler.getInstance().cancelAll()));
                 Controlls.DRIVER_CONTROLLER.cross().whileTrue(feedandshootback);
                 Controlls.DRIVER_CONTROLLER.create().onChange(new InstantCommand(()->intakeArm.resetEncoders()));
+                Controlls.DRIVER_CONTROLLER.R1().whileTrue(limelightSubsystem.faceAprilTagTX(drivebase));
         }
 
         public Command getAutonomousCommand() {

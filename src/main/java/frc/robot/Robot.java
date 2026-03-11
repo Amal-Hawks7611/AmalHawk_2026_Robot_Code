@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.OI;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -72,8 +71,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
       m_robotContainer.led_morse.cancel();
     }
-    OI.IS_TEST = false;
-    m_robotContainer.configureButtonBindings();
   }
 
   @Override
@@ -83,7 +80,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    OI.IS_TEST = true;
     CommandScheduler.getInstance().schedule(m_robotContainer.led_morse);
   }
 

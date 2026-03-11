@@ -2,7 +2,6 @@ package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.EnabledParts;
-import frc.robot.Constants.OI;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class Intake extends Command {
@@ -17,7 +16,6 @@ public class Intake extends Command {
     public void initialize() {
         System.out.println("Fuel Intaking Ininialized");
         intakeSubsystem.setIntaking(true);
-        OI.IS_INTAKING = true;
 
     }
 
@@ -32,7 +30,6 @@ public class Intake extends Command {
     public void end(boolean interrupted) {
         intakeSubsystem.leaderMotor.stopMotor();
         intakeSubsystem.setIntaking(false);
-        OI.IS_INTAKING = false;
     }
 
     @Override

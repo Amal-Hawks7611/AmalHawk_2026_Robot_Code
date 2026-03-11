@@ -50,12 +50,12 @@ public final class Constants {
 
     public static class Intake {
         public static int INTAKE_LEADER_MOTOR_PORT = 16;
-        public static double INTAKE_SPEED = 0.7;
+        public static double INTAKE_SPEED = 0.75;
         public static double INTAKE_TIME = 0.5;
     }
     public static class Feeder {
         public static int FEEDER_LEADER_MOTOR_PORT = 21;
-        public static double FEEDER_SPEED = 53;
+        public static double FEEDER_SPEED = 47;
         public static double FEEDER_PERIODIC_SPEED = 8;
         public static double FEEDER_TIME = 9.6;
     }
@@ -64,7 +64,7 @@ public final class Constants {
         public static int SHOOTER_SLAVE_PORT = 23;
         public static double STAGE1_SPEED = 0.5;
         public static double STAGE2_SPEED = 60;
-        public static double STAGE3_SPEED = 66;
+        public static double STAGE3_SPEED = 62;
         public static double SHOOTER_TIME = 10;
     }
     public static class IntakeArm {
@@ -101,6 +101,7 @@ public final class Constants {
         public static Trigger INTAKE_UP_PID = Controlls.DRIVER_CONTROLLER.povUp();
         public static Trigger INDIR_KALDIR = Controlls.DRIVER_CONTROLLER.povRight();
         public static Trigger LIMELIGHT_DEHSET = Controlls.DRIVER_CONTROLLER.square();
+        public static Trigger RESET_LL_ODOMETRY = Controlls.DRIVER_CONTROLLER.touchpad();
 
         public static Trigger START_LOG = Controlls.OPERATOR_CONTROLLER.povLeft();
         public static Trigger STOP_LOG = Controlls.OPERATOR_CONTROLLER.povRight();

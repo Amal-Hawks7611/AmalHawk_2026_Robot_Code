@@ -41,6 +41,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public void setIntaking(boolean active){
         isIntaking = active;
     }
+    public static void setIntakingStatic(boolean active){
+        isIntaking = active;
+    }
     public boolean getIntaking(){
         return isIntaking;
     }

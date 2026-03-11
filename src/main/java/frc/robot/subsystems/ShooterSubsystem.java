@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.Shooter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private StatusSignal<Angle> leaderMotorPosition;
     public boolean isShooting = false;
     public Timer timer = new Timer();
+    public InterpolatingDoubleTreeMap interpolation;
     public final VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
     public ShooterSubsystem() {
         TalonFXConfiguration config = new TalonFXConfiguration();
@@ -37,7 +39,10 @@ public class ShooterSubsystem extends SubsystemBase {
         leaderMotorPosition = leaderMotor.getPosition();
         slaveMotorPosition = slaveMotor.getPosition();
         slaveMotor.setControl(new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
-      
+        interpolation = new InterpolatingDoubleTreeMap();
+        interpolation.put(2.4, 65.0);
+        interpolation.put(3.6, 75.0);
+        interpolation.put(1.78, 62.0);
         resetEncoders();
     }
 
@@ -69,10 +74,15 @@ public class ShooterSubsystem extends SubsystemBase {
     public void stopMotors(){
        leaderMotor.set(0);
     }
+    public double getSpeed(){
+        return interpolation.get(LimelightSubsystem.getZ());
+    }
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("isShooting", isShooting);
-        SmartDashboard.putNumber("ShooterSpeed", leaderMotor.get());
+        SmartDashboard.putNumber("ShooterSpeed", Shooter.STAGE3_SPEED);
         SmartDashboard.putNumber("GetZ", LimelightSubsystem.getZ());
+        SmartDashboard.putNumber("SpeedShoot", getSpeed());
+        Shooter.STAGE3_SPEED = getSpeed();
     }
 }

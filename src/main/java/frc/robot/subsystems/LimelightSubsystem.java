@@ -30,14 +30,102 @@ public class LimelightSubsystem extends SubsystemBase {
     }
 
     private AlignmentTarget currentTarget = AlignmentTarget.NONE;
-
     private boolean isAligned = false;
+
+    private double lastX = 0;
+    private double lastZ = 0;
+    private double lastYaw = 0;
+    private boolean hasPose = false;
 
     private static double x = LimelightSubsystem.getZ();
 
     double velocity_required = Math.sqrt(
             (GRAVITY * x * x) / (2 * Math.cos(SHOOTER_ANGLE_DEG) * (x * Math.tan(SHOOTER_ANGLE_DEG) - TARGET_HEIGHT)));
 
+    public Command rotateToAprilTag(
+        SwerveSubsystem swerve,
+        double targetYaw,
+        AlignmentTarget targetType) {
+
+    return new FunctionalCommand(
+
+            () -> {
+                isAligned = false;
+                currentTarget = targetType;
+                hasPose = false;
+            },
+
+            () -> {
+
+                if (LimelightHelpers.getTV(OI.LL_NAME)) {
+                    double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
+                    if (pose.length >= 6) {
+                        lastYaw = pose[5];
+                        hasPose = true;
+                    }
+                }
+
+                if (!hasPose)
+                    return;
+
+                double yawError = lastYaw - targetYaw;
+                double rot = 0;
+
+                if (Math.abs(yawError) > YAW_TOLERANCE)
+                    rot = yawError > 0 ? ROT_SPEED : -ROT_SPEED;
+
+                swerve.drive(
+                        new Translation2d(0, 0),
+                        rot,
+                        false);
+
+                isAligned = Math.abs(yawError) <= YAW_TOLERANCE;
+            },
+
+            interrupted -> {
+                swerve.drive(new Translation2d(0, 0), 0, false);
+                isAligned = true;
+            },
+
+            () -> isAligned,
+
+            swerve);
+}
+
+public Command faceAprilTagTX(SwerveSubsystem swerve) {
+
+    return new FunctionalCommand(
+
+        () -> {},
+
+        () -> {
+
+            if (!LimelightHelpers.getTV(OI.LL_NAME))
+                return;
+
+            double tx = LimelightHelpers.getTX(OI.LL_NAME);
+
+            double kP = 0.03;
+            double rot = -tx * kP;
+
+            if (rot > 0.5) rot = 0.5;
+            if (rot < -0.5) rot = -0.5;
+
+            swerve.drive(
+                new Translation2d(0, 0),
+                rot,
+                false
+            );
+
+        },
+
+        interrupted -> swerve.drive(new Translation2d(0,0),0,false),
+
+        () -> Math.abs(LimelightHelpers.getTX(OI.LL_NAME)) < 1.0,
+
+        swerve
+    );
+}
     public Command alignToPose(
             SwerveSubsystem swerve,
             double targetX,
@@ -54,19 +142,22 @@ public class LimelightSubsystem extends SubsystemBase {
 
                 () -> {
 
-                    if (!LimelightHelpers.getTV(OI.LL_NAME)) {
-                        swerve.drive(new Translation2d(0, 0), 0, false);
-                        isAligned = false;
-                        currentTarget = AlignmentTarget.NONE;
-                        return;
+                    if (LimelightHelpers.getTV(OI.LL_NAME)) {
+                        double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
+                        if (pose.length >= 6) {
+                            lastX = pose[0];
+                            lastZ = pose[2];
+                            lastYaw = pose[5];
+                            hasPose = true;
+                        }
                     }
-                    double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
-                    if (pose.length < 6)
+
+                    if (!hasPose)
                         return;
 
-                    double currentX = pose[0];
-                    double currentZ = pose[2];
-                    double currentYaw = pose[5];
+                    double currentX = lastX;
+                    double currentZ = lastZ;
+                    double currentYaw = lastYaw;
 
                     double yawError = currentYaw - targetYaw;
                     double xError = currentX - targetX;
@@ -112,7 +203,6 @@ public class LimelightSubsystem extends SubsystemBase {
     public boolean isAligned() {
         return isAligned;
     }
-
     public AlignmentTarget getCurrentTarget() {
         return currentTarget;
     }
@@ -122,6 +212,7 @@ public class LimelightSubsystem extends SubsystemBase {
         double[] pose = LimelightHelpers.getTargetPose_RobotSpace(OI.LL_NAME);
         if (pose.length < 6)
             return;
+
         double currentX = pose[0];
         double currentZ = pose[2];
         double currentYaw = pose[5];
